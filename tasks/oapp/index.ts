@@ -1,0 +1,2 @@
+import "./setConfig";
+import "./getConfig";
