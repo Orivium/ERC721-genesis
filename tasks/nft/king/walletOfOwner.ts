@@ -7,14 +7,16 @@ import {
     King__factory,
 } from "../../../typechain"
 
-task("king:mint", "mint king nft")
-    .addParam("tokenId", "token id of the nft")
+task("king:wallet", "get wallet of owner")
+    .addParam("owner", "owner address")
     .setAction(async (taskArguments: TaskArguments, hre: HardhatRuntimeEnvironment) => {
         const kingAddress = (await hre.deployments.get("King")).address;
         const accounts = await hre.ethers.getSigners();
         const signer = accounts[0];
-        if (!signer) return;
+        if (!signer) throw new Error("missing signer");
+
         const king: King = King__factory.connect(kingAddress, signer);
-        await king.mint(signer.address, taskArguments.tokenId);
-        console.log(`Successfully minted king nft with tokenId ${taskArguments.tokenId} to ${signer.address}`);
+        const wallet = await king.walletOfOwner(taskArguments.owner);
+        console.log(`${taskArguments.owner} has ${wallet.length} king nft(s)`);
+        console.log(wallet);
 });

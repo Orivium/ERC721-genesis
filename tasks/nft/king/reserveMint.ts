@@ -7,7 +7,8 @@ import {
     King__factory,
 } from "../../../typechain"
 
-task("king:purchase", "buy king nft")
+task("king:reserve-mint", "reserve mint nft")
+    .addOptionalParam("to", "address to mint to", "0")
     .addOptionalParam("batch", "batch size", "1")
     .setAction(async (taskArguments: TaskArguments, hre: HardhatRuntimeEnvironment) => {
         const kingAddress = (await hre.deployments.get("King")).address;
@@ -15,18 +16,14 @@ task("king:purchase", "buy king nft")
         const signer = accounts[0];
         if (!signer) throw new Error("missing signer");
 
+        const to = taskArguments.to === "0" ? signer.address : taskArguments.to;
         const king: King = King__factory.connect(kingAddress, signer);
         if (taskArguments.batch === "1") {
-            const res = await king.purchase(
-                { value: await king.price() }
-            );
+            const res = await king.reserveMint(to);
             await res.wait();
         } else {
-            const res = await king.purchaseBatch(
-                taskArguments.batch,
-                { value: await king.price() * BigInt(taskArguments.batch) }
-            );
+            const res = await king.reserveMintBatch(to, taskArguments.batch)
             await res.wait();
         }
-        console.log(`Successfully purchased ${taskArguments.batch} king nft(s) by ${signer.address}`);
+        console.log(`Successfully reserve mint ${taskArguments.batch} king nft(s) by ${signer.address}`);
 });

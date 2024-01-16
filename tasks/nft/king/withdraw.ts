@@ -7,7 +7,7 @@ import {
     King__factory,
 } from "../../../typechain"
 
-task("king-sale:withdraw", "withdraw funds from king sale contract")
+task("king:withdraw", "withdraw funds from king contract")
     .setAction(async (_: TaskArguments, hre: HardhatRuntimeEnvironment) => {
         const kingAddress = (await hre.deployments.get("King")).address;
         const accounts = await hre.ethers.getSigners();

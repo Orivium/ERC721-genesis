@@ -1,7 +1,8 @@
-// import "./mintKing"; // prefer using king-sale:buy-king
 import "./ownerOf";
 import "./purchase";
+import "./purchaseOg";
+import "./purchaseWhitelist";
+import "./reserveMint";
+import "./setBaseUri";
 import "./withdraw";
-// import "./setPeer";
-// import "./lzBridge";
-// import "./getOappConfig";
+import "./walletOfOwner";
