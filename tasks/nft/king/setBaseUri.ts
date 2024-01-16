@@ -7,8 +7,8 @@ import {
     King__factory,
 } from "../../../typechain"
 
-task("king:purchase", "buy king nft")
-    .addOptionalParam("batch", "batch size", "1")
+task("king:set-base-uri", "set nft metadata base uri")
+    .addParam("uri", "base uri")
     .setAction(async (taskArguments: TaskArguments, hre: HardhatRuntimeEnvironment) => {
         const kingAddress = (await hre.deployments.get("King")).address;
         const accounts = await hre.ethers.getSigners();
@@ -16,17 +16,8 @@ task("king:purchase", "buy king nft")
         if (!signer) throw new Error("missing signer");
 
         const king: King = King__factory.connect(kingAddress, signer);
-        if (taskArguments.batch === "1") {
-            const res = await king.purchase(
-                { value: await king.price() }
-            );
-            await res.wait();
-        } else {
-            const res = await king.purchaseBatch(
-                taskArguments.batch,
-                { value: await king.price() * BigInt(taskArguments.batch) }
-            );
-            await res.wait();
-        }
-        console.log(`Successfully purchased ${taskArguments.batch} king nft(s) by ${signer.address}`);
+        const baseURI = await king.baseTokenURI();
+        const res = await king.setBaseURI(taskArguments.uri)
+        await res.wait();
+        console.log(`Successfully set base uri from ${baseURI} to ${taskArguments.uri}`);
 });
