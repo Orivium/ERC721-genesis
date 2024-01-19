@@ -14,14 +14,13 @@ describe('King2d ERC721', () => {
     let king2d: King2d;
     let accounts: HardhatEthersSigner[]
     let purchaser: HardhatEthersSigner;
+    let multiSigWallet: HardhatEthersSigner;
     let merkleTree: MerkleTree;
     let ogMerkleTree: MerkleTree;
     let rootHash: string;
     let ogRootHash: string;
 
-    const baseUri = "https://nft.orivium.io/nft/king2d/";
-    const mintableSupply = 4000n;
-    const totalSupply = 4444n;
+    const mintableSupply = 4300n;
     const openMintTimestamp = 1706371200n;
     const whitelistMintTimestamp = openMintTimestamp - 7200n; // minus 2hours
     const ogWhitelistMintTimestamp = whitelistMintTimestamp - 7200n; // minus 2hours
@@ -33,6 +32,9 @@ describe('King2d ERC721', () => {
         accounts = await ethers.getSigners();
         if (!accounts[1]) throw new Error("accounts[1] is undefined");
         purchaser = accounts[1];
+
+        if (!accounts[10]) throw new Error("accounts[10] is undefined");
+        multiSigWallet = accounts[10];
 
         // create whitelist merkle tree
         const whitelist = accounts.slice(0, 6).map(account => account.address);
@@ -48,9 +50,10 @@ describe('King2d ERC721', () => {
 
         const king2dFactory: ContractFactory = await ethers.getContractFactory("King2d");
         king2d = <King2d>await king2dFactory.deploy(
-            baseUri,
             rootHash,
-            ogRootHash
+            ogRootHash,
+            openMintTimestamp,
+            multiSigWallet,
         );
     });
 
@@ -216,65 +219,30 @@ describe('King2d ERC721', () => {
                 });
             });
         });
+
     });
-
-    describe("reserve", async () => {
-        describe("single mint", async () => {
-            it("should revert if not admin", async () => {
-                await expect(king2d.connect(purchaser).reserveMint(purchaser.address))
-                    .to.be.revertedWithCustomError(king2d, "OwnableUnauthorizedAccount");
-            });
-
-            it("should mint a king2d to the sender", async () => {
-                await king2d.reserveMint(purchaser.address);
-                expect(await king2d.balanceOf(purchaser.address)).to.equal(1);
-            });
-
-            it("should emit a King2dMinted event", async () => {
-                await expect(king2d.reserveMint(purchaser.address))
-                    .to.emit(king2d, "King2dMinted")
-                    .withArgs(purchaser.address, 4001);
-            });
-
-            it("should revert if sold out", async () => {
-                const promises = [];
-                for (let i = 4000n; i < totalSupply; i += 1n) {
-                    promises.push(king2d.reserveMint(purchaser.address));
-                }
-                await Promise.all(promises);
-                await expect(king2d.reserveMint(purchaser.address))
-                    .to.be.revertedWithCustomError(king2d, "SoldOut");
-            });
+    describe("deployment", async () => {
+        it("should mint 144 nfts to the oriviumMultiSig address from 4300 to 4444", async () => {
+            const kingFactory: ContractFactory = await ethers.getContractFactory("King2d");
+            const king: King2d = <King2d>await kingFactory.deploy(
+                rootHash,
+                ogRootHash,
+                openMintTimestamp,
+                multiSigWallet,
+            );
+            expect(await king.balanceOf(multiSigWallet.address)).to.equal(144);
+            expect(await king.ownerOf(4301)).to.equal(multiSigWallet.address);
+            expect(await king.ownerOf(4444)).to.equal(multiSigWallet.address);
         });
-        describe("batch mint", async () => {
-            it("should revert if not admin", async () => {
-                await expect(king2d.connect(purchaser).reserveBatchMint(purchaser.address, 2n))
-                    .to.be.revertedWithCustomError(king2d, "OwnableUnauthorizedAccount");
-            });
 
-            it("should mint multiple king2ds to the sender", async () => {
-                await king2d.reserveBatchMint(purchaser.address, 2n);
-                expect(await king2d.balanceOf(purchaser.address)).to.equal(2);
-            });
-
-            it("should emit batchSize King2dMinted event", async () => {
-                await expect(king2d.reserveBatchMint(purchaser.address, 2n))
-                    .to.emit(king2d, "King2dMinted")
-                    .withArgs(purchaser.address, 4001)
-                    .to.emit(king2d, "King2dMinted")
-                    .withArgs(purchaser.address, 4002);
-            });
-
-            it("should revert if sold out", async () => {
-                const promises = [];
-                for (let i = 4000n; i < totalSupply - 1n; i += 20n) {
-                    const amount = i + 20n > totalSupply - 1n ? totalSupply - 1n - i : 20n;
-                    promises.push(king2d.reserveBatchMint(purchaser.address, amount));
-                }
-                await Promise.all(promises);
-                await expect(king2d.reserveBatchMint(purchaser.address, 2n))
-                    .to.be.revertedWithCustomError(king2d, "SoldOut");
-            });
+        it("should revert if multiSig address is zero address", async () => {
+            const kingFactory: ContractFactory = await ethers.getContractFactory("King2d");
+            await expect(kingFactory.deploy(
+                rootHash,
+                ogRootHash,
+                openMintTimestamp,
+                ethers.ZeroAddress,
+            )).to.be.revertedWithCustomError(kingFactory, "MultiSigIsZeroAddress");
         });
     });
 
