@@ -39,6 +39,20 @@ describe('MerkleTreeWhitelist', () => {
         merkleTreeWhitelist = <Testable_MerkleTreeWhitelist>await merkleTreeWhitelistFactory.deploy(rootHash, ogRootHash);
     });
 
+    it("cannot be deployed with same root hash for og and whitelist", async () => {
+        const leafNodes = whitelisted.map(address => ethers.keccak256(address));
+        const merkleTree = new MerkleTree(leafNodes, ethers.keccak256, { sortPairs: true });
+        const rootHash = merkleTree.getHexRoot();
+
+        const ogLeafNode = ogWhitelisted.map(address => ethers.keccak256(address));
+        const ogMerkleTree = new MerkleTree(ogLeafNode, ethers.keccak256, { sortPairs: true });
+        const ogRootHash = ogMerkleTree.getHexRoot();
+
+        const merkleTreeWhitelistFactory: ContractFactory = await ethers.getContractFactory("Testable_MerkleTreeWhitelist");
+        await expect(merkleTreeWhitelistFactory.deploy(rootHash, rootHash)).to.be.revertedWithCustomError(merkleTreeWhitelistFactory, "NotUniqueRootHash");
+        await expect(merkleTreeWhitelistFactory.deploy(ogRootHash, ogRootHash)).to.be.revertedWithCustomError(merkleTreeWhitelistFactory, "NotUniqueRootHash");
+    });
+
     it("every address in the whitelist should be whitelisted", async () => {
         for (const address of whitelisted) {
             const proof = merkleTree.getHexProof(ethers.keccak256(address));
