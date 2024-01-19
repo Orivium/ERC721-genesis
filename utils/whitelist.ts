@@ -34,5 +34,9 @@ export const getOGWhiteListedAddress = async () => {
         ...await getWhiteListedAddress(),
 
         // todo: add some test addresses
+
+        //fake addresses
+        "0x78731D3Ca6b7E34aC0F824c42a7cC18A489cabaB",
+        "0x617F2E2fD72FD9D5503197092aC168c91895E7f2",
     ]);
 }

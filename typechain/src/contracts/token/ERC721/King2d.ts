@@ -30,11 +30,11 @@ export interface King2dInterface extends Interface {
       | "MAX_WALLET_AMOUNT"
       | "OG"
       | "OPEN"
+      | "ORIVIUM_MULTI_SIG_WALLET"
       | "TOTAL_SUPPLY"
       | "WHITELIST"
       | "approve"
       | "balanceOf"
-      | "baseTokenURI"
       | "freeBatchMint"
       | "freeMint"
       | "freeMintOG"
@@ -45,20 +45,14 @@ export interface King2dInterface extends Interface {
       | "isWhitelisted"
       | "mintedAmount"
       | "name"
-      | "owner"
       | "ownerOf"
-      | "renounceOwnership"
-      | "reserveBatchMint"
-      | "reserveMint"
       | "safeTransferFrom(address,address,uint256)"
       | "safeTransferFrom(address,address,uint256,bytes)"
       | "setApprovalForAll"
-      | "setBaseURI"
       | "supportsInterface"
       | "symbol"
       | "tokenURI"
       | "transferFrom"
-      | "transferOwnership"
       | "walletMintable"
       | "walletOfOwner"
       | "whitelistMint"
@@ -69,7 +63,6 @@ export interface King2dInterface extends Interface {
       | "Approval"
       | "ApprovalForAll"
       | "King2dMinted"
-      | "OwnershipTransferred"
       | "Transfer"
   ): EventFragment;
 
@@ -84,6 +77,10 @@ export interface King2dInterface extends Interface {
   encodeFunctionData(functionFragment: "OG", values?: undefined): string;
   encodeFunctionData(functionFragment: "OPEN", values?: undefined): string;
   encodeFunctionData(
+    functionFragment: "ORIVIUM_MULTI_SIG_WALLET",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
     functionFragment: "TOTAL_SUPPLY",
     values?: undefined
   ): string;
@@ -95,10 +92,6 @@ export interface King2dInterface extends Interface {
   encodeFunctionData(
     functionFragment: "balanceOf",
     values: [AddressLike]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "baseTokenURI",
-    values?: undefined
   ): string;
   encodeFunctionData(
     functionFragment: "freeBatchMint",
@@ -134,22 +127,9 @@ export interface King2dInterface extends Interface {
     values: [AddressLike]
   ): string;
   encodeFunctionData(functionFragment: "name", values?: undefined): string;
-  encodeFunctionData(functionFragment: "owner", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "ownerOf",
     values: [BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "renounceOwnership",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "reserveBatchMint",
-    values: [AddressLike, BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "reserveMint",
-    values: [AddressLike]
   ): string;
   encodeFunctionData(
     functionFragment: "safeTransferFrom(address,address,uint256)",
@@ -163,7 +143,6 @@ export interface King2dInterface extends Interface {
     functionFragment: "setApprovalForAll",
     values: [AddressLike, boolean]
   ): string;
-  encodeFunctionData(functionFragment: "setBaseURI", values: [string]): string;
   encodeFunctionData(
     functionFragment: "supportsInterface",
     values: [BytesLike]
@@ -176,10 +155,6 @@ export interface King2dInterface extends Interface {
   encodeFunctionData(
     functionFragment: "transferFrom",
     values: [AddressLike, AddressLike, BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "transferOwnership",
-    values: [AddressLike]
   ): string;
   encodeFunctionData(
     functionFragment: "walletMintable",
@@ -205,16 +180,16 @@ export interface King2dInterface extends Interface {
   decodeFunctionResult(functionFragment: "OG", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "OPEN", data: BytesLike): Result;
   decodeFunctionResult(
+    functionFragment: "ORIVIUM_MULTI_SIG_WALLET",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "TOTAL_SUPPLY",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "WHITELIST", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "approve", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "baseTokenURI",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(
     functionFragment: "freeBatchMint",
     data: BytesLike
@@ -246,20 +221,7 @@ export interface King2dInterface extends Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "ownerOf", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "renounceOwnership",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "reserveBatchMint",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "reserveMint",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(
     functionFragment: "safeTransferFrom(address,address,uint256)",
     data: BytesLike
@@ -272,7 +234,6 @@ export interface King2dInterface extends Interface {
     functionFragment: "setApprovalForAll",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "setBaseURI", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "supportsInterface",
     data: BytesLike
@@ -281,10 +242,6 @@ export interface King2dInterface extends Interface {
   decodeFunctionResult(functionFragment: "tokenURI", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "transferFrom",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "transferOwnership",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -347,19 +304,6 @@ export namespace King2dMintedEvent {
   export interface OutputObject {
     minter: string;
     tokenId: bigint;
-  }
-  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
-  export type Filter = TypedDeferredTopicFilter<Event>;
-  export type Log = TypedEventLog<Event>;
-  export type LogDescription = TypedLogDescription<Event>;
-}
-
-export namespace OwnershipTransferredEvent {
-  export type InputTuple = [previousOwner: AddressLike, newOwner: AddressLike];
-  export type OutputTuple = [previousOwner: string, newOwner: string];
-  export interface OutputObject {
-    previousOwner: string;
-    newOwner: string;
   }
   export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
   export type Filter = TypedDeferredTopicFilter<Event>;
@@ -436,6 +380,8 @@ export interface King2d extends BaseContract {
 
   OPEN: TypedContractMethod<[], [bigint], "view">;
 
+  ORIVIUM_MULTI_SIG_WALLET: TypedContractMethod<[], [string], "view">;
+
   TOTAL_SUPPLY: TypedContractMethod<[], [bigint], "view">;
 
   WHITELIST: TypedContractMethod<[], [bigint], "view">;
@@ -447,8 +393,6 @@ export interface King2d extends BaseContract {
   >;
 
   balanceOf: TypedContractMethod<[owner: AddressLike], [bigint], "view">;
-
-  baseTokenURI: TypedContractMethod<[], [string], "view">;
 
   freeBatchMint: TypedContractMethod<
     [_batch: BigNumberish],
@@ -490,19 +434,7 @@ export interface King2d extends BaseContract {
 
   name: TypedContractMethod<[], [string], "view">;
 
-  owner: TypedContractMethod<[], [string], "view">;
-
   ownerOf: TypedContractMethod<[tokenId: BigNumberish], [string], "view">;
-
-  renounceOwnership: TypedContractMethod<[], [void], "nonpayable">;
-
-  reserveBatchMint: TypedContractMethod<
-    [_to: AddressLike, _batch: BigNumberish],
-    [void],
-    "nonpayable"
-  >;
-
-  reserveMint: TypedContractMethod<[_to: AddressLike], [void], "nonpayable">;
 
   "safeTransferFrom(address,address,uint256)": TypedContractMethod<
     [from: AddressLike, to: AddressLike, tokenId: BigNumberish],
@@ -527,8 +459,6 @@ export interface King2d extends BaseContract {
     "nonpayable"
   >;
 
-  setBaseURI: TypedContractMethod<[baseURI: string], [void], "nonpayable">;
-
   supportsInterface: TypedContractMethod<
     [interfaceId: BytesLike],
     [boolean],
@@ -541,12 +471,6 @@ export interface King2d extends BaseContract {
 
   transferFrom: TypedContractMethod<
     [from: AddressLike, to: AddressLike, tokenId: BigNumberish],
-    [void],
-    "nonpayable"
-  >;
-
-  transferOwnership: TypedContractMethod<
-    [newOwner: AddressLike],
     [void],
     "nonpayable"
   >;
@@ -572,6 +496,9 @@ export interface King2d extends BaseContract {
     nameOrSignature: "OPEN"
   ): TypedContractMethod<[], [bigint], "view">;
   getFunction(
+    nameOrSignature: "ORIVIUM_MULTI_SIG_WALLET"
+  ): TypedContractMethod<[], [string], "view">;
+  getFunction(
     nameOrSignature: "TOTAL_SUPPLY"
   ): TypedContractMethod<[], [bigint], "view">;
   getFunction(
@@ -587,9 +514,6 @@ export interface King2d extends BaseContract {
   getFunction(
     nameOrSignature: "balanceOf"
   ): TypedContractMethod<[owner: AddressLike], [bigint], "view">;
-  getFunction(
-    nameOrSignature: "baseTokenURI"
-  ): TypedContractMethod<[], [string], "view">;
   getFunction(
     nameOrSignature: "freeBatchMint"
   ): TypedContractMethod<[_batch: BigNumberish], [void], "nonpayable">;
@@ -633,24 +557,8 @@ export interface King2d extends BaseContract {
     nameOrSignature: "name"
   ): TypedContractMethod<[], [string], "view">;
   getFunction(
-    nameOrSignature: "owner"
-  ): TypedContractMethod<[], [string], "view">;
-  getFunction(
     nameOrSignature: "ownerOf"
   ): TypedContractMethod<[tokenId: BigNumberish], [string], "view">;
-  getFunction(
-    nameOrSignature: "renounceOwnership"
-  ): TypedContractMethod<[], [void], "nonpayable">;
-  getFunction(
-    nameOrSignature: "reserveBatchMint"
-  ): TypedContractMethod<
-    [_to: AddressLike, _batch: BigNumberish],
-    [void],
-    "nonpayable"
-  >;
-  getFunction(
-    nameOrSignature: "reserveMint"
-  ): TypedContractMethod<[_to: AddressLike], [void], "nonpayable">;
   getFunction(
     nameOrSignature: "safeTransferFrom(address,address,uint256)"
   ): TypedContractMethod<
@@ -678,9 +586,6 @@ export interface King2d extends BaseContract {
     "nonpayable"
   >;
   getFunction(
-    nameOrSignature: "setBaseURI"
-  ): TypedContractMethod<[baseURI: string], [void], "nonpayable">;
-  getFunction(
     nameOrSignature: "supportsInterface"
   ): TypedContractMethod<[interfaceId: BytesLike], [boolean], "view">;
   getFunction(
@@ -696,9 +601,6 @@ export interface King2d extends BaseContract {
     [void],
     "nonpayable"
   >;
-  getFunction(
-    nameOrSignature: "transferOwnership"
-  ): TypedContractMethod<[newOwner: AddressLike], [void], "nonpayable">;
   getFunction(
     nameOrSignature: "walletMintable"
   ): TypedContractMethod<[_wallet: AddressLike], [bigint], "view">;
@@ -729,13 +631,6 @@ export interface King2d extends BaseContract {
     King2dMintedEvent.InputTuple,
     King2dMintedEvent.OutputTuple,
     King2dMintedEvent.OutputObject
-  >;
-  getEvent(
-    key: "OwnershipTransferred"
-  ): TypedContractEvent<
-    OwnershipTransferredEvent.InputTuple,
-    OwnershipTransferredEvent.OutputTuple,
-    OwnershipTransferredEvent.OutputObject
   >;
   getEvent(
     key: "Transfer"
@@ -777,17 +672,6 @@ export interface King2d extends BaseContract {
       King2dMintedEvent.InputTuple,
       King2dMintedEvent.OutputTuple,
       King2dMintedEvent.OutputObject
-    >;
-
-    "OwnershipTransferred(address,address)": TypedContractEvent<
-      OwnershipTransferredEvent.InputTuple,
-      OwnershipTransferredEvent.OutputTuple,
-      OwnershipTransferredEvent.OutputObject
-    >;
-    OwnershipTransferred: TypedContractEvent<
-      OwnershipTransferredEvent.InputTuple,
-      OwnershipTransferredEvent.OutputTuple,
-      OwnershipTransferredEvent.OutputObject
     >;
 
     "Transfer(address,address,uint256)": TypedContractEvent<

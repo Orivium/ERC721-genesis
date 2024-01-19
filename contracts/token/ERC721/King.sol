@@ -21,60 +21,69 @@ pragma solidity ^0.8.20;
  **********************************************************************************************/
 
 import { ERC721 } from "@openzeppelin/contracts/token/ERC721/ERC721.sol";
-import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
 import { ReentrancyGuard } from "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 
 import { MerkleTreeWhitelist } from "../../utils/MerkleTreeWhitelist.sol";
 
+error MultiSigIsZeroAddress();
 error SalePhaseNotStarted();
 error SoldOut();
 error InsufficientFunds();
 
-contract King is ERC721, ReentrancyGuard, Ownable, MerkleTreeWhitelist {
-	uint256 private _saleTokenIdTracker;
-	uint256 private _reservedTokenIdTracker;
+contract King is ERC721, ReentrancyGuard, MerkleTreeWhitelist {
+	uint256 private _tokenIdTracker;
 
 	uint256 public constant TOTAL_SUPPLY = 4444;
-	uint256 public constant AMOUNT_ON_SALE = 4000;
+	uint256 public constant AMOUNT_ON_SALE = 4300;
 
 	// Sale phases timestamps
-	uint256 public constant OPEN = 1706457600; // Jan 28, 2024, 4:00:00 PM
-	uint256 public constant WHITELIST = OPEN - 2 hours;
-	uint256 public constant OG = WHITELIST - 2 hours;
+	uint256 public immutable OPEN;
+	uint256 public immutable WHITELIST;
+	uint256 public immutable OG;
 
 	uint256 public immutable PRICE;
-	string public baseTokenURI;
+	address public immutable ORIVIUM_MULTI_SIG_WALLET;
 
 	event KingPurchased(address buyer, uint256 indexed tokenId);
 
 	constructor(
-		string memory baseURI,
 		bytes32 _whitelistMerkleRoot,
 		bytes32 _ogWhitelistMerkleRoot,
-		uint256 _price
+		uint256 _price,
+		uint256 _openSaleTimestamp,
+		address _oriviumMultiSigWallet
 	)
 		MerkleTreeWhitelist(_whitelistMerkleRoot, _ogWhitelistMerkleRoot)
 		ERC721("King", "KING")
-		Ownable(_msgSender())
 	{
-		setBaseURI(baseURI);
+		if (_oriviumMultiSigWallet == address(0)) revert MultiSigIsZeroAddress();
 		PRICE = _price;
-		_reservedTokenIdTracker = AMOUNT_ON_SALE;
+		ORIVIUM_MULTI_SIG_WALLET = _oriviumMultiSigWallet;
+		OPEN = _openSaleTimestamp;
+		WHITELIST = OPEN - 2 hours;
+		OG = WHITELIST - 2 hours;
+
+		// Minting 144 reserved tokens to the Orivium multisig wallet,
+		// these tokens will be used for partnerships and marketing purposes
+		for (uint256 i = AMOUNT_ON_SALE + 1; i <= TOTAL_SUPPLY; i += 1) {
+			_safeMint(_oriviumMultiSigWallet, i);
+		}
+	}
+
+	function _baseURI() internal view virtual override returns (string memory) {
+		return "https://nft.orivium.io/nft/king/";
 	}
 
 	/*********************************************
 	 *                  SALE INFOS               *
 	 *                                           *
-	 * Price: TBA                                *
-	 *                                           *
-	 * Amount on sale: 4000                      *
+	 * Amount on sale: 4300                      *
 	 *                                           *
 	 * Limit: No limit                           *
 	 *                                           *
 	 * Phases:                                   *
-	 * - OG: from 12:00pm to 2:00pm              *
-	 * - Whitelist: from 2:00pm to 4:00pm        *
-	 * - Open: from 4:00pm                       *
+	 * - OG: 2 hours before whitelist sale       *
+	 * - Whitelist: 2 hours before open sale     *
 	 ********************************************/
 
 	modifier salePhase(uint256 _timestamp) {
@@ -118,69 +127,30 @@ contract King is ERC721, ReentrancyGuard, Ownable, MerkleTreeWhitelist {
 
 	function _purchase() private {
 		if (msg.value != PRICE) revert InsufficientFunds();
-		if (_saleTokenIdTracker >= AMOUNT_ON_SALE) revert SoldOut();
+		if (_tokenIdTracker >= AMOUNT_ON_SALE) revert SoldOut();
 
 		_purchaseMint();
+		_transferFunds();
 	}
 
 	function _purchaseBatch(uint256 _batch) private {
-		if (_saleTokenIdTracker + _batch > AMOUNT_ON_SALE) revert SoldOut();
+		if (_tokenIdTracker + _batch > AMOUNT_ON_SALE) revert SoldOut();
 		if (msg.value != PRICE * _batch) revert InsufficientFunds();
 
 		for (uint256 i = 0; i < _batch; i += 1) {
 			_purchaseMint();
 		}
+		_transferFunds();
+	}
+
+	function _transferFunds() private {
+		payable(ORIVIUM_MULTI_SIG_WALLET).transfer(msg.value);
 	}
 
 	function _purchaseMint() private {
-		_saleTokenIdTracker += 1;
-		emit KingPurchased(_msgSender(), _saleTokenIdTracker);
-		_safeMint(_msgSender(), _saleTokenIdTracker);
-	}
-
-	/*********************************************
-	 *                RESERVE INFOS              *
-	 *                                           *
-	 * Reserved for marketing purposes           *
-	 *                                           *
-	 * Amount reserved: 444                      *
-	 ********************************************/
-
-	function reserveMint(address _to) public onlyOwner {
-		if (_reservedTokenIdTracker >= TOTAL_SUPPLY) revert SoldOut();
-
-		_reserveMint(_to);
-	}
-
-	function reserveMintBatch(address _to, uint256 _batch) public onlyOwner {
-		if (_reservedTokenIdTracker + _batch > TOTAL_SUPPLY) revert SoldOut();
-
-		for (uint256 i = 0; i < _batch; i += 1) {
-			_reserveMint(_to);
-		}
-	}
-
-	function _reserveMint(address _to) private {
-		_reservedTokenIdTracker += 1;
-		emit KingPurchased(_to, _reservedTokenIdTracker);
-		_safeMint(_to, _reservedTokenIdTracker);
-	}
-
-	/*********************************************
-	 *                  ADMIN                    *
-	 ********************************************/
-
-	function withdraw() public onlyOwner {
-		uint256 balance = address(this).balance;
-		payable(owner()).transfer(balance);
-	}
-
-	function setBaseURI(string memory baseURI) public onlyOwner {
-		baseTokenURI = baseURI;
-	}
-
-	function _baseURI() internal view virtual override returns (string memory) {
-		return baseTokenURI;
+		_tokenIdTracker += 1;
+		emit KingPurchased(_msgSender(), _tokenIdTracker);
+		_safeMint(_msgSender(), _tokenIdTracker);
 	}
 
 	/*********************************************
