@@ -1,7 +1,7 @@
 // contracts/utils/MerkTreeWhitelist/.sol
 // SPDX-License-Identifier: MIT
 
-pragma solidity ^0.8.22;
+pragma solidity ^0.8.20;
 
 import { Context } from "@openzeppelin/contracts/utils/Context.sol";
 import { MerkleProof } from "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol";
