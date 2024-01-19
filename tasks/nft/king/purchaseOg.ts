@@ -26,14 +26,14 @@ task("king:purchase-og", "buy king nft")
         if (taskArguments.batch === "1") {
             const res = await king.purchaseOG(
                 proof,
-                { value: await king.price() }
+                { value: await king.PRICE() }
             );
             await res.wait();
         } else {
             const res = await king.purchaseBatchOG(
                 taskArguments.batch,
                 proof,
-                { value: await king.price() * BigInt(taskArguments.batch) }
+                { value: await king.PRICE() * BigInt(taskArguments.batch) }
             );
             await res.wait();
         }

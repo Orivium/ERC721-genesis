@@ -26,14 +26,14 @@ task("king:purchase-wl", "buy king nft")
         if (taskArguments.batch === "1") {
             const res = await king.purchaseWhitelist(
                 proof,
-                { value: await king.price() }
+                { value: await king.PRICE() }
             );
             await res.wait();
         } else {
             const res = await king.purchaseBatchWhitelist(
                 taskArguments.batch,
                 proof,
-                { value: await king.price() * BigInt(taskArguments.batch) }
+                { value: await king.PRICE() * BigInt(taskArguments.batch) }
             );
             await res.wait();
         }

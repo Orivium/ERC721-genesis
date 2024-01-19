@@ -29,6 +29,7 @@ export interface KingInterface extends Interface {
       | "AMOUNT_ON_SALE"
       | "OG"
       | "OPEN"
+      | "PRICE"
       | "TOTAL_SUPPLY"
       | "WHITELIST"
       | "approve"
@@ -41,7 +42,6 @@ export interface KingInterface extends Interface {
       | "name"
       | "owner"
       | "ownerOf"
-      | "price"
       | "purchase"
       | "purchaseBatch"
       | "purchaseBatchOG"
@@ -79,6 +79,7 @@ export interface KingInterface extends Interface {
   ): string;
   encodeFunctionData(functionFragment: "OG", values?: undefined): string;
   encodeFunctionData(functionFragment: "OPEN", values?: undefined): string;
+  encodeFunctionData(functionFragment: "PRICE", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "TOTAL_SUPPLY",
     values?: undefined
@@ -118,7 +119,6 @@ export interface KingInterface extends Interface {
     functionFragment: "ownerOf",
     values: [BigNumberish]
   ): string;
-  encodeFunctionData(functionFragment: "price", values?: undefined): string;
   encodeFunctionData(functionFragment: "purchase", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "purchaseBatch",
@@ -194,6 +194,7 @@ export interface KingInterface extends Interface {
   ): Result;
   decodeFunctionResult(functionFragment: "OG", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "OPEN", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "PRICE", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "TOTAL_SUPPLY",
     data: BytesLike
@@ -224,7 +225,6 @@ export interface KingInterface extends Interface {
   decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "ownerOf", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "price", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "purchase", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "purchaseBatch",
@@ -422,6 +422,8 @@ export interface King extends BaseContract {
 
   OPEN: TypedContractMethod<[], [bigint], "view">;
 
+  PRICE: TypedContractMethod<[], [bigint], "view">;
+
   TOTAL_SUPPLY: TypedContractMethod<[], [bigint], "view">;
 
   WHITELIST: TypedContractMethod<[], [bigint], "view">;
@@ -461,8 +463,6 @@ export interface King extends BaseContract {
   owner: TypedContractMethod<[], [string], "view">;
 
   ownerOf: TypedContractMethod<[tokenId: BigNumberish], [string], "view">;
-
-  price: TypedContractMethod<[], [bigint], "view">;
 
   purchase: TypedContractMethod<[], [void], "payable">;
 
@@ -561,6 +561,9 @@ export interface King extends BaseContract {
     nameOrSignature: "OPEN"
   ): TypedContractMethod<[], [bigint], "view">;
   getFunction(
+    nameOrSignature: "PRICE"
+  ): TypedContractMethod<[], [bigint], "view">;
+  getFunction(
     nameOrSignature: "TOTAL_SUPPLY"
   ): TypedContractMethod<[], [bigint], "view">;
   getFunction(
@@ -612,9 +615,6 @@ export interface King extends BaseContract {
   getFunction(
     nameOrSignature: "ownerOf"
   ): TypedContractMethod<[tokenId: BigNumberish], [string], "view">;
-  getFunction(
-    nameOrSignature: "price"
-  ): TypedContractMethod<[], [bigint], "view">;
   getFunction(
     nameOrSignature: "purchase"
   ): TypedContractMethod<[], [void], "payable">;
