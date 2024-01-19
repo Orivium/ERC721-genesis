@@ -42,7 +42,7 @@ contract King is ERC721, ReentrancyGuard, Ownable, MerkleTreeWhitelist {
 	uint256 public constant WHITELIST = OPEN - 2 hours;
 	uint256 public constant OG = WHITELIST - 2 hours;
 
-	uint256 public price;
+	uint256 public immutable PRICE;
 	string public baseTokenURI;
 
 	event KingPurchased(address buyer, uint256 indexed tokenId);
@@ -58,7 +58,7 @@ contract King is ERC721, ReentrancyGuard, Ownable, MerkleTreeWhitelist {
 		Ownable(_msgSender())
 	{
 		setBaseURI(baseURI);
-		price = _price;
+		PRICE = _price;
 		_reservedTokenIdTracker = AMOUNT_ON_SALE;
 	}
 
@@ -117,7 +117,7 @@ contract King is ERC721, ReentrancyGuard, Ownable, MerkleTreeWhitelist {
 	}
 
 	function _purchase() private {
-		if (msg.value != price) revert InsufficientFunds();
+		if (msg.value != PRICE) revert InsufficientFunds();
 		if (_saleTokenIdTracker >= AMOUNT_ON_SALE) revert SoldOut();
 
 		_purchaseMint();
@@ -125,7 +125,7 @@ contract King is ERC721, ReentrancyGuard, Ownable, MerkleTreeWhitelist {
 
 	function _purchaseBatch(uint256 _batch) private {
 		if (_saleTokenIdTracker + _batch > AMOUNT_ON_SALE) revert SoldOut();
-		if (msg.value != price * _batch) revert InsufficientFunds();
+		if (msg.value != PRICE * _batch) revert InsufficientFunds();
 
 		for (uint256 i = 0; i < _batch; i += 1) {
 			_purchaseMint();
