@@ -52,10 +52,7 @@ contract King is ERC721, ReentrancyGuard, MerkleTreeWhitelist {
 		uint256 _price,
 		uint256 _openSaleTimestamp,
 		address _oriviumMultiSigWallet
-	)
-		MerkleTreeWhitelist(_whitelistMerkleRoot, _ogWhitelistMerkleRoot)
-		ERC721("King", "KING")
-	{
+	) MerkleTreeWhitelist(_whitelistMerkleRoot, _ogWhitelistMerkleRoot) ERC721("King", "KING") {
 		if (_oriviumMultiSigWallet == address(0)) revert MultiSigIsZeroAddress();
 		PRICE = _price;
 		ORIVIUM_MULTI_SIG_WALLET = _oriviumMultiSigWallet;

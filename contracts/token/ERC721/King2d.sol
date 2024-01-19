@@ -58,10 +58,7 @@ contract King2d is ERC721, ReentrancyGuard, MerkleTreeWhitelist {
 		bytes32 _ogWhitelistMerkleRoot,
 		uint256 _openMintTimestamp,
 		address _oriviumMultiSigWallet
-	)
-		MerkleTreeWhitelist(_whitelistMerkleRoot, _ogWhitelistMerkleRoot)
-		ERC721("King2d", "KING2D")
-	{
+	) MerkleTreeWhitelist(_whitelistMerkleRoot, _ogWhitelistMerkleRoot) ERC721("King2d", "KING2D") {
 		if (_oriviumMultiSigWallet == address(0)) revert MultiSigIsZeroAddress();
 		ORIVIUM_MULTI_SIG_WALLET = _oriviumMultiSigWallet;
 		OPEN = _openMintTimestamp;
