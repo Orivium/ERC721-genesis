@@ -1,17 +1,6 @@
 //SPDX-License-Identifier: MIT
 pragma solidity ^0.8.22;
 
-import { ERC721 } from "@openzeppelin/contracts/token/ERC721/ERC721.sol";
-import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
-import { ReentrancyGuard } from "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
-
-import { MerkleTreeWhitelist } from "../../utils/MerkleTreeWhitelist.sol";
-
-error MintPhaseNotStarted();
-error SoldOut();
-error MaxAmountMinted();
-error MaxWLAmountMinted();
-
 /***********************************************************************************************
  *               ...                                                                           *
  *         *@@@@@@@@@@@-                    .                                                  *
@@ -31,15 +20,26 @@ error MaxWLAmountMinted();
  *                                                                                             *
  **********************************************************************************************/
 
+import { ERC721 } from "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
+import { ReentrancyGuard } from "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
+
+import { MerkleTreeWhitelist } from "../../utils/MerkleTreeWhitelist.sol";
+
+error MintPhaseNotStarted();
+error SoldOut();
+error MaxAmountMinted();
+error MaxWLAmountMinted();
+
 contract King2d is ERC721, ReentrancyGuard, Ownable, MerkleTreeWhitelist {
 	uint256 private _freeMintTokenIdTracker;
 	uint256 private _reservedTokenIdTracker;
 
-	uint256 public constant TOTAL_SUPPLY = 4444; // TODO: change this value before deploy
-	uint256 public constant AMOUNT_ON_FREE_MINT = 4000; // TODO: change this value before deploy
-	uint256 public constant MAX_WALLET_AMOUNT = 5; // TODO: change this value before deploy
+	uint256 public constant TOTAL_SUPPLY = 4444;
+	uint256 public constant AMOUNT_ON_FREE_MINT = 4000;
+	uint256 public constant MAX_WALLET_AMOUNT = 5;
 
-	// Sale phases timestamps // TODO: change this value before deploy
+	// Sale phases timestamps
 	uint256 public constant OPEN = 1706371200; // Jan 27, 2024, 4:00:00 PM
 	uint256 public constant WHITELIST = OPEN - 2 hours;
 	uint256 public constant OG = WHITELIST - 2 hours;
@@ -199,19 +199,4 @@ contract King2d is ERC721, ReentrancyGuard, Ownable, MerkleTreeWhitelist {
 
 		return tokensId;
 	}
-
-	// // TODO: remove this method before deploy
-	// function __setOpenSaleTimestamp(uint256 _timestamp) public {
-	// 	openSaleTimestamp = _timestamp;
-	// }
-
-	// // TODO: remove this method before deploy
-	// function __setOGWhitelistOpenSaleTimestamp(uint256 _timestamp) public {
-	// 	ogWhitelistSaleTimestamp = _timestamp;
-	// }
-
-	// // TODO: remove this method before deploy
-	// function __setWhitelistOpenSaleTimestamp(uint256 _timestamp) public {
-	// 	whitelistSaleTimestamp = _timestamp;
-	// }
 }

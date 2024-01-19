@@ -1,16 +1,6 @@
 //SPDX-License-Identifier: MIT
 pragma solidity ^0.8.22;
 
-import { ERC721 } from "@openzeppelin/contracts/token/ERC721/ERC721.sol";
-import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
-import { ReentrancyGuard } from "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
-
-import { MerkleTreeWhitelist } from "../../utils/MerkleTreeWhitelist.sol";
-
-error SalePhaseNotStarted();
-error SoldOut();
-error InsufficientFunds();
-
 /***********************************************************************************************
  *               ...                                                                           *
  *         *@@@@@@@@@@@-                    .                                                  *
@@ -30,6 +20,16 @@ error InsufficientFunds();
  *                                                                                             *
  **********************************************************************************************/
 
+import { ERC721 } from "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
+import { ReentrancyGuard } from "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
+
+import { MerkleTreeWhitelist } from "../../utils/MerkleTreeWhitelist.sol";
+
+error SalePhaseNotStarted();
+error SoldOut();
+error InsufficientFunds();
+
 contract King is ERC721, ReentrancyGuard, Ownable, MerkleTreeWhitelist {
 	uint256 private _saleTokenIdTracker;
 	uint256 private _reservedTokenIdTracker;
@@ -37,7 +37,7 @@ contract King is ERC721, ReentrancyGuard, Ownable, MerkleTreeWhitelist {
 	uint256 public constant TOTAL_SUPPLY = 4444;
 	uint256 public constant AMOUNT_ON_SALE = 4000;
 
-	// Sale phases timestamps // TODO: change this value before deploy
+	// Sale phases timestamps
 	uint256 public constant OPEN = 1706457600; // Jan 28, 2024, 4:00:00 PM
 	uint256 public constant WHITELIST = OPEN - 2 hours;
 	uint256 public constant OG = WHITELIST - 2 hours;
@@ -183,11 +183,6 @@ contract King is ERC721, ReentrancyGuard, Ownable, MerkleTreeWhitelist {
 		return baseTokenURI;
 	}
 
-	// TODO: use Chainlink VRF
-	// function setMetadatShuffleSeed() public onlyOwner {
-	// 	// TODO: implement this
-	// }
-
 	/*********************************************
 	 *                  UTILS                    *
 	 ********************************************/
@@ -208,19 +203,4 @@ contract King is ERC721, ReentrancyGuard, Ownable, MerkleTreeWhitelist {
 
 		return tokensId;
 	}
-
-	// // TODO: remove this method before deploy
-	// function __setOpenSaleTimestamp(uint256 _timestamp) public {
-	// 	openSaleTimestamp = _timestamp;
-	// }
-
-	// // TODO: remove this method before deploy
-	// function __setOGWhitelistOpenSaleTimestamp(uint256 _timestamp) public {
-	// 	ogWhitelistSaleTimestamp = _timestamp;
-	// }
-
-	// // TODO: remove this method before deploy
-	// function __setWhitelistOpenSaleTimestamp(uint256 _timestamp) public {
-	// 	whitelistSaleTimestamp = _timestamp;
-	// }
 }
