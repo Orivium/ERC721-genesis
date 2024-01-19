@@ -10,6 +10,11 @@ import type {
 
 const _abi = [
   {
+    inputs: [],
+    name: "NotUniqueRootHash",
+    type: "error",
+  },
+  {
     inputs: [
       {
         internalType: "address",
