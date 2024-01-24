@@ -22,8 +22,8 @@ describe('King ERC721', () => {
     const priceEth = ethers.parseEther("0.0001");
     const amountOnSale = 4300n;
     const openSaleTimestamp = 1706457600n
-    const whitelistSaleTimestamp = openSaleTimestamp - 7200n; // minus 2 hours
-    const ogWhitelistSaleTimestamp = whitelistSaleTimestamp - 7200n; // minus 2 hours
+    const whitelistSaleTimestamp = openSaleTimestamp - 900n; // minus 2 hours
+    const ogWhitelistSaleTimestamp = whitelistSaleTimestamp - 900n; // minus 2 hours
 
     beforeEach(async () => {
         // i don't get why this is needed while using time.increaseTo ...

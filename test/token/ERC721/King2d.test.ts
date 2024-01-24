@@ -22,8 +22,8 @@ describe('King2d ERC721', () => {
 
     const mintableSupply = 4300n;
     const openMintTimestamp = 1706371200n;
-    const whitelistMintTimestamp = openMintTimestamp - 7200n; // minus 2hours
-    const ogWhitelistMintTimestamp = whitelistMintTimestamp - 7200n; // minus 2hours
+    const whitelistMintTimestamp = openMintTimestamp - 900n; // minus 2hours
+    const ogWhitelistMintTimestamp = whitelistMintTimestamp - 900n; // minus 2hours
     const maxWalletAmount = 5n;
 
     beforeEach(async () => {
