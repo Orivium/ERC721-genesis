@@ -62,8 +62,8 @@ contract King2d is ERC721, ReentrancyGuard, MerkleTreeWhitelist {
 		if (_oriviumMultiSigWallet == address(0)) revert MultiSigIsZeroAddress();
 		ORIVIUM_MULTI_SIG_WALLET = _oriviumMultiSigWallet;
 		OPEN = _openMintTimestamp;
-		WHITELIST = OPEN - 2 hours;
-		OG = WHITELIST - 2 hours;
+		WHITELIST = OPEN - 15 minutes;
+		OG = WHITELIST - 15 minutes;
 
 		// Minting 144 reserved tokens to the Orivium multisig wallet,
 		// these tokens will be used for partnerships and marketing purposes
