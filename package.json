@@ -1,5 +1,5 @@
 {
-    "name": "@orivium/smart-contracts",
+    "name": "@orivium/genesis-smart-contracts",
     "version": "0.0.1",
     "description": "",
     "license": "MIT",
@@ -21,8 +21,8 @@
         "@nomicfoundation/hardhat-ethers": "^3.0.4",
         "@nomicfoundation/hardhat-ledger": "^1.0.1",
         "@nomicfoundation/hardhat-network-helpers": "^1.0.8",
-        "@nomicfoundation/hardhat-toolbox": "^3.0.0",
-        "@nomicfoundation/hardhat-verify": "^1.0.3",
+        "@nomicfoundation/hardhat-toolbox": "^4.0.0",
+        "@nomicfoundation/hardhat-verify": "^2.0.3",
         "@nomiclabs/hardhat-solhint": "^3.0.1",
         "@openzeppelin/contracts": "^5.0.0",
         "@typechain/ethers-v6": "^0.5.1",

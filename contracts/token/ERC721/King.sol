@@ -79,8 +79,8 @@ contract King is ERC721, ReentrancyGuard, MerkleTreeWhitelist {
 	 * Limit: No limit                           *
 	 *                                           *
 	 * Phases:                                   *
-	 * - OG: 2 hours before whitelist sale       *
-	 * - Whitelist: 2 hours before open sale     *
+	 * - OG: 15 minutes before whitelist sale    *
+	 * - Whitelist: 15 minutes before open sale  *
 	 ********************************************/
 
 	modifier salePhase(uint256 _timestamp) {

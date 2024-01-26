@@ -24,14 +24,13 @@ const deployFunction: DeployFunction = async({ getNamedAccounts, deployments, ne
     const ogMerkleTree = new MerkleTree(ogLeafs, ethers.keccak256, { sortPairs: true });
     const ogRootHash = ogMerkleTree.getHexRoot();
 
-    // TODO: set price before deployment
-    const price = ethers.parseEther("0.0001");
-    // TODO: set open sale timestamp before deployment
-    const openSaleTimestamp = 1706457600; // Jan 28, 2024, 4:00:00 PM
+    const price = ethers.parseEther("0.07");
+    const openSaleTimestamp = 1706455800; // Jan 28, 2024, 3:30:00 PM
 
     const multiSigWallet = multiSigWallets[network.name] ?? deployer;
 
     console.log(`deploying King with on ${network.name} network`);
+
     await deploy("King", {
         from: deployer,
         args: [
@@ -45,7 +44,6 @@ const deployFunction: DeployFunction = async({ getNamedAccounts, deployments, ne
         waitConfirmations: network.name === "hardhat" ? 0 : 2,
     });
 
-    if (!network.config.verify?.etherscan?.apiKey || process.env["VERIFY"] === "false") return;
     await run("verify:verify", {
         address: (await deployments.get("King")).address,
         contract: "contracts/token/ERC721/King.sol:King",
@@ -53,6 +51,7 @@ const deployFunction: DeployFunction = async({ getNamedAccounts, deployments, ne
             wlRootHash,
             ogRootHash,
             price,
+            openSaleTimestamp,
             multiSigWallet,
         ],
     });

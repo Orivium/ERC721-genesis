@@ -24,8 +24,7 @@ const deployFunction: DeployFunction = async({ getNamedAccounts, deployments, et
     const ogMerkleTree = new MerkleTree(ogLeafs, ethers.keccak256, { sortPairs: true });
     const ogRootHash = ogMerkleTree.getHexRoot();
 
-    // TODO: set open sale timestamp before deployment
-    const openSaleTimestamp = 1706371200; // Jan 27, 2024, 4:00:00 PM
+    const openSaleTimestamp = 1706369400; // Jan 27, 2024, 3:30:00 PM
 
     const multiSigWallet = multiSigWallets[network.name] ?? deployer;
 
@@ -40,8 +39,6 @@ const deployFunction: DeployFunction = async({ getNamedAccounts, deployments, et
         log: true,
         waitConfirmations: network.name === "hardhat" ? 0 : 2,
     });
-
-    if (!network.config.verify?.etherscan?.apiKey || process.env["VERIFY"] === "false") return;
 
     await run("verify:verify", {
         address: (await deployments.get("King2d")).address,
