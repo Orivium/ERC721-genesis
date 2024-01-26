@@ -86,8 +86,8 @@ contract King2d is ERC721, ReentrancyGuard, MerkleTreeWhitelist {
 	 *  - a total of 5 per wallet                *
 	 *                                           *
 	 * Phases:                                   *
-	 * - OG: 2 hours before whitelist mint       *
-	 * - Whitelist: 2 hours before open mint     *
+	 * - OG: 15 minutes before whitelist mint    *
+	 * - Whitelist: 15 minutes before open mint  *
 	 ********************************************/
 
 	modifier mintPhase(uint256 _timestamp) {
