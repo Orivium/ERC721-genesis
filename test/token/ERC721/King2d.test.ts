@@ -21,7 +21,7 @@ describe('King2d ERC721', () => {
     let ogRootHash: string;
 
     const mintableSupply = 4300n;
-    const openMintTimestamp = 1706371200n;
+    const openMintTimestamp = 1706868400n;
     const whitelistMintTimestamp = openMintTimestamp - 900n; // minus 2hours
     const ogWhitelistMintTimestamp = whitelistMintTimestamp - 900n; // minus 2hours
     const maxWalletAmount = 5n;

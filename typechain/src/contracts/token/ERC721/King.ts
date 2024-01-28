@@ -28,11 +28,12 @@ export interface KingInterface extends Interface {
     nameOrSignature:
       | "AMOUNT_ON_SALE"
       | "OG"
+      | "OG_PRICE"
       | "OPEN"
-      | "ORIVIUM_MULTI_SIG_WALLET"
       | "PRICE"
       | "TOTAL_SUPPLY"
       | "WHITELIST"
+      | "WHITELIST_PRICE"
       | "approve"
       | "balanceOf"
       | "getApproved"
@@ -40,6 +41,7 @@ export interface KingInterface extends Interface {
       | "isOGWhitelisted"
       | "isWhitelisted"
       | "name"
+      | "owner"
       | "ownerOf"
       | "purchase"
       | "purchaseBatch"
@@ -47,13 +49,16 @@ export interface KingInterface extends Interface {
       | "purchaseBatchWhitelist"
       | "purchaseOG"
       | "purchaseWhitelist"
+      | "renounceOwnership"
       | "safeTransferFrom(address,address,uint256)"
       | "safeTransferFrom(address,address,uint256,bytes)"
       | "setApprovalForAll"
       | "supportsInterface"
       | "symbol"
       | "tokenURI"
+      | "totalSupply"
       | "transferFrom"
+      | "transferOwnership"
       | "walletOfOwner"
   ): FunctionFragment;
 
@@ -62,6 +67,7 @@ export interface KingInterface extends Interface {
       | "Approval"
       | "ApprovalForAll"
       | "KingPurchased"
+      | "OwnershipTransferred"
       | "Transfer"
   ): EventFragment;
 
@@ -70,17 +76,18 @@ export interface KingInterface extends Interface {
     values?: undefined
   ): string;
   encodeFunctionData(functionFragment: "OG", values?: undefined): string;
+  encodeFunctionData(functionFragment: "OG_PRICE", values?: undefined): string;
   encodeFunctionData(functionFragment: "OPEN", values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: "ORIVIUM_MULTI_SIG_WALLET",
-    values?: undefined
-  ): string;
   encodeFunctionData(functionFragment: "PRICE", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "TOTAL_SUPPLY",
     values?: undefined
   ): string;
   encodeFunctionData(functionFragment: "WHITELIST", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "WHITELIST_PRICE",
+    values?: undefined
+  ): string;
   encodeFunctionData(
     functionFragment: "approve",
     values: [AddressLike, BigNumberish]
@@ -106,6 +113,7 @@ export interface KingInterface extends Interface {
     values: [AddressLike, BytesLike[]]
   ): string;
   encodeFunctionData(functionFragment: "name", values?: undefined): string;
+  encodeFunctionData(functionFragment: "owner", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "ownerOf",
     values: [BigNumberish]
@@ -132,6 +140,10 @@ export interface KingInterface extends Interface {
     values: [BytesLike[]]
   ): string;
   encodeFunctionData(
+    functionFragment: "renounceOwnership",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
     functionFragment: "safeTransferFrom(address,address,uint256)",
     values: [AddressLike, AddressLike, BigNumberish]
   ): string;
@@ -153,8 +165,16 @@ export interface KingInterface extends Interface {
     values: [BigNumberish]
   ): string;
   encodeFunctionData(
+    functionFragment: "totalSupply",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
     functionFragment: "transferFrom",
     values: [AddressLike, AddressLike, BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "transferOwnership",
+    values: [AddressLike]
   ): string;
   encodeFunctionData(
     functionFragment: "walletOfOwner",
@@ -166,17 +186,18 @@ export interface KingInterface extends Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "OG", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "OG_PRICE", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "OPEN", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "ORIVIUM_MULTI_SIG_WALLET",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(functionFragment: "PRICE", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "TOTAL_SUPPLY",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "WHITELIST", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "WHITELIST_PRICE",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "approve", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
   decodeFunctionResult(
@@ -196,6 +217,7 @@ export interface KingInterface extends Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "ownerOf", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "purchase", data: BytesLike): Result;
   decodeFunctionResult(
@@ -213,6 +235,10 @@ export interface KingInterface extends Interface {
   decodeFunctionResult(functionFragment: "purchaseOG", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "purchaseWhitelist",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "renounceOwnership",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -234,7 +260,15 @@ export interface KingInterface extends Interface {
   decodeFunctionResult(functionFragment: "symbol", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "tokenURI", data: BytesLike): Result;
   decodeFunctionResult(
+    functionFragment: "totalSupply",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "transferFrom",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "transferOwnership",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -289,6 +323,19 @@ export namespace KingPurchasedEvent {
   export interface OutputObject {
     buyer: string;
     tokenId: bigint;
+  }
+  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
+  export type Filter = TypedDeferredTopicFilter<Event>;
+  export type Log = TypedEventLog<Event>;
+  export type LogDescription = TypedLogDescription<Event>;
+}
+
+export namespace OwnershipTransferredEvent {
+  export type InputTuple = [previousOwner: AddressLike, newOwner: AddressLike];
+  export type OutputTuple = [previousOwner: string, newOwner: string];
+  export interface OutputObject {
+    previousOwner: string;
+    newOwner: string;
   }
   export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
   export type Filter = TypedDeferredTopicFilter<Event>;
@@ -361,15 +408,17 @@ export interface King extends BaseContract {
 
   OG: TypedContractMethod<[], [bigint], "view">;
 
-  OPEN: TypedContractMethod<[], [bigint], "view">;
+  OG_PRICE: TypedContractMethod<[], [bigint], "view">;
 
-  ORIVIUM_MULTI_SIG_WALLET: TypedContractMethod<[], [string], "view">;
+  OPEN: TypedContractMethod<[], [bigint], "view">;
 
   PRICE: TypedContractMethod<[], [bigint], "view">;
 
   TOTAL_SUPPLY: TypedContractMethod<[], [bigint], "view">;
 
   WHITELIST: TypedContractMethod<[], [bigint], "view">;
+
+  WHITELIST_PRICE: TypedContractMethod<[], [bigint], "view">;
 
   approve: TypedContractMethod<
     [to: AddressLike, tokenId: BigNumberish],
@@ -401,6 +450,8 @@ export interface King extends BaseContract {
 
   name: TypedContractMethod<[], [string], "view">;
 
+  owner: TypedContractMethod<[], [string], "view">;
+
   ownerOf: TypedContractMethod<[tokenId: BigNumberish], [string], "view">;
 
   purchase: TypedContractMethod<[], [void], "payable">;
@@ -426,6 +477,8 @@ export interface King extends BaseContract {
     [void],
     "payable"
   >;
+
+  renounceOwnership: TypedContractMethod<[], [void], "nonpayable">;
 
   "safeTransferFrom(address,address,uint256)": TypedContractMethod<
     [from: AddressLike, to: AddressLike, tokenId: BigNumberish],
@@ -460,13 +513,25 @@ export interface King extends BaseContract {
 
   tokenURI: TypedContractMethod<[tokenId: BigNumberish], [string], "view">;
 
+  totalSupply: TypedContractMethod<[], [bigint], "view">;
+
   transferFrom: TypedContractMethod<
     [from: AddressLike, to: AddressLike, tokenId: BigNumberish],
     [void],
     "nonpayable"
   >;
 
-  walletOfOwner: TypedContractMethod<[_owner: AddressLike], [bigint[]], "view">;
+  transferOwnership: TypedContractMethod<
+    [newOwner: AddressLike],
+    [void],
+    "nonpayable"
+  >;
+
+  walletOfOwner: TypedContractMethod<
+    [_address: AddressLike],
+    [bigint[]],
+    "view"
+  >;
 
   getFunction<T extends ContractMethod = ContractMethod>(
     key: string | FunctionFragment
@@ -477,11 +542,11 @@ export interface King extends BaseContract {
   ): TypedContractMethod<[], [bigint], "view">;
   getFunction(nameOrSignature: "OG"): TypedContractMethod<[], [bigint], "view">;
   getFunction(
-    nameOrSignature: "OPEN"
+    nameOrSignature: "OG_PRICE"
   ): TypedContractMethod<[], [bigint], "view">;
   getFunction(
-    nameOrSignature: "ORIVIUM_MULTI_SIG_WALLET"
-  ): TypedContractMethod<[], [string], "view">;
+    nameOrSignature: "OPEN"
+  ): TypedContractMethod<[], [bigint], "view">;
   getFunction(
     nameOrSignature: "PRICE"
   ): TypedContractMethod<[], [bigint], "view">;
@@ -490,6 +555,9 @@ export interface King extends BaseContract {
   ): TypedContractMethod<[], [bigint], "view">;
   getFunction(
     nameOrSignature: "WHITELIST"
+  ): TypedContractMethod<[], [bigint], "view">;
+  getFunction(
+    nameOrSignature: "WHITELIST_PRICE"
   ): TypedContractMethod<[], [bigint], "view">;
   getFunction(
     nameOrSignature: "approve"
@@ -529,6 +597,9 @@ export interface King extends BaseContract {
     nameOrSignature: "name"
   ): TypedContractMethod<[], [string], "view">;
   getFunction(
+    nameOrSignature: "owner"
+  ): TypedContractMethod<[], [string], "view">;
+  getFunction(
     nameOrSignature: "ownerOf"
   ): TypedContractMethod<[tokenId: BigNumberish], [string], "view">;
   getFunction(
@@ -557,6 +628,9 @@ export interface King extends BaseContract {
   getFunction(
     nameOrSignature: "purchaseWhitelist"
   ): TypedContractMethod<[_proof: BytesLike[]], [void], "payable">;
+  getFunction(
+    nameOrSignature: "renounceOwnership"
+  ): TypedContractMethod<[], [void], "nonpayable">;
   getFunction(
     nameOrSignature: "safeTransferFrom(address,address,uint256)"
   ): TypedContractMethod<
@@ -593,6 +667,9 @@ export interface King extends BaseContract {
     nameOrSignature: "tokenURI"
   ): TypedContractMethod<[tokenId: BigNumberish], [string], "view">;
   getFunction(
+    nameOrSignature: "totalSupply"
+  ): TypedContractMethod<[], [bigint], "view">;
+  getFunction(
     nameOrSignature: "transferFrom"
   ): TypedContractMethod<
     [from: AddressLike, to: AddressLike, tokenId: BigNumberish],
@@ -600,8 +677,11 @@ export interface King extends BaseContract {
     "nonpayable"
   >;
   getFunction(
+    nameOrSignature: "transferOwnership"
+  ): TypedContractMethod<[newOwner: AddressLike], [void], "nonpayable">;
+  getFunction(
     nameOrSignature: "walletOfOwner"
-  ): TypedContractMethod<[_owner: AddressLike], [bigint[]], "view">;
+  ): TypedContractMethod<[_address: AddressLike], [bigint[]], "view">;
 
   getEvent(
     key: "Approval"
@@ -623,6 +703,13 @@ export interface King extends BaseContract {
     KingPurchasedEvent.InputTuple,
     KingPurchasedEvent.OutputTuple,
     KingPurchasedEvent.OutputObject
+  >;
+  getEvent(
+    key: "OwnershipTransferred"
+  ): TypedContractEvent<
+    OwnershipTransferredEvent.InputTuple,
+    OwnershipTransferredEvent.OutputTuple,
+    OwnershipTransferredEvent.OutputObject
   >;
   getEvent(
     key: "Transfer"
@@ -664,6 +751,17 @@ export interface King extends BaseContract {
       KingPurchasedEvent.InputTuple,
       KingPurchasedEvent.OutputTuple,
       KingPurchasedEvent.OutputObject
+    >;
+
+    "OwnershipTransferred(address,address)": TypedContractEvent<
+      OwnershipTransferredEvent.InputTuple,
+      OwnershipTransferredEvent.OutputTuple,
+      OwnershipTransferredEvent.OutputObject
+    >;
+    OwnershipTransferred: TypedContractEvent<
+      OwnershipTransferredEvent.InputTuple,
+      OwnershipTransferredEvent.OutputTuple,
+      OwnershipTransferredEvent.OutputObject
     >;
 
     "Transfer(address,address,uint256)": TypedContractEvent<
