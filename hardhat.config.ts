@@ -30,7 +30,6 @@ if (process.env["COINMARKETCAP_API_KEY"]) {
 const ETHERSCAN_API_KEY = process.env["ETHERSCAN_API_KEY"] as string;
 const ARBITRUM_API_KEY = process.env["ARBITRUM_API_KEY"] as string;
 
-console.log("REPORT_GAS: " + ETHERSCAN_API_KEY);
 const ledgerAccounts = [
     "0x935967faD7ebE3E686cf3d835dEfEBA6B5a70CdC", // orivium admin public
 ];
