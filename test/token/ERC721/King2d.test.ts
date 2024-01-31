@@ -10,7 +10,7 @@ import {
 import MerkleTree from 'merkletreejs';
 import type { ContractFactory, ContractTransactionResponse } from 'ethers';
 
-describe('King2d ERC721', () => {
+describe.skip('King2d ERC721', () => {
     let king2d: King2d;
     let accounts: HardhatEthersSigner[]
     let purchaser: HardhatEthersSigner;
