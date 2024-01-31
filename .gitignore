@@ -141,3 +141,6 @@ gas-report.txt
 # typechain
 typechain/src
 typechain/dist
+
+# config 
+settings.json

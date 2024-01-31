@@ -90,6 +90,38 @@ describe('KingStaking', () => {
                 )).to.emit(kingStaking, "Staked").withArgs(staker.address, king.target, 1, lockTime);
             });
         });
+
+        describe("Unstake", async () => {
+            beforeEach(async () => {
+                await king.mint(staker.address, 1);
+                const coder = new ethers.AbiCoder();
+                const data = coder.encode(["uint256"], [MINIMUM_LOCK_TIME]);
+                await king.connect(staker)["safeTransferFrom(address,address,uint256,bytes)"](
+                    staker.address, kingStaking.target, 1, data
+                );
+            });
+
+            it("reverts if not called by the staker", async () => {
+                await expect(kingStaking.unstake(king.target, 1))
+                    .to.be.revertedWithCustomError(kingStaking, "InvalidOperator");
+            });
+
+            it("delete stacking infos", async () => {
+                await kingStaking.connect(staker).unstake(king.target, 1);
+                expect(await kingStaking.stakingInfos(staker.address, king.target, 1)).to.equal(0);
+            });
+
+            it("emits an Unstaked event", async () => {
+                await expect(kingStaking.connect(staker).unstake(king.target, 1))
+                    .to.emit(kingStaking, "Unstaked").withArgs(staker.address, king.target, 1);
+            });
+
+            it("send the token back to the staker", async () => {
+                await kingStaking.connect(staker).unstake(king.target, 1);
+                expect(await king.ownerOf(1)).to.equal(staker.address);
+            });
+        });
+
     });
 
     describe("King2d Staking", () => {
@@ -145,6 +177,37 @@ describe('KingStaking', () => {
                 await expect(king2d.connect(staker)["safeTransferFrom(address,address,uint256,bytes)"](
                     staker.address, kingStaking.target, 1, data
                 )).to.emit(kingStaking, "Staked").withArgs(staker.address, king2d.target, 1, lockTime);
+            });
+        });
+
+        describe("Unstake", () => {
+            beforeEach(async () => {
+                await king2d.mint(staker.address, 1);
+                const coder = new ethers.AbiCoder();
+                const data = coder.encode(["uint256"], [MINIMUM_LOCK_TIME]);
+                await king2d.connect(staker)["safeTransferFrom(address,address,uint256,bytes)"](
+                    staker.address, kingStaking.target, 1, data
+                );
+            });
+
+            it("reverts if not called by the staker", async () => {
+                await expect(kingStaking.unstake(king2d.target, 1))
+                    .to.be.revertedWithCustomError(kingStaking, "InvalidOperator");
+            });
+
+            it("delete stacking infos", async () => {
+                await kingStaking.connect(staker).unstake(king2d.target, 1);
+                expect(await kingStaking.stakingInfos(staker.address, king2d.target, 1)).to.equal(0);
+            });
+
+            it("emits an Unstaked event", async () => {
+                await expect(kingStaking.connect(staker).unstake(king2d.target, 1))
+                    .to.emit(kingStaking, "Unstaked").withArgs(staker.address, king2d.target, 1);
+            });
+
+            it("send the token back to the staker", async () => {
+                await kingStaking.connect(staker).unstake(king2d.target, 1);
+                expect(await king2d.ownerOf(1)).to.equal(staker.address);
             });
         });
     });

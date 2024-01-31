@@ -21,6 +21,7 @@ pragma solidity ^0.8.20;
  **********************************************************************************************/
 
 import { IERC721Receiver } from "@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol";
+import { IERC721 } from "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import { Context } from "@openzeppelin/contracts/utils/Context.sol";
 
 import { King } from "../token/ERC721/King.sol";
@@ -29,6 +30,7 @@ import { King2d } from "../token/ERC721/King2d.sol";
 error InvalidOperator();
 error InvalidDataLength();
 error InvalidMinimumLockTime();
+error InvalidContract();
 
 contract KingStaking is IERC721Receiver, Context {
 	King public immutable king;
@@ -60,7 +62,8 @@ contract KingStaking is IERC721Receiver, Context {
 		uint256 _tokenId,
 		bytes calldata _data
 	) external override returns (bytes4) {
-		if (_msgSender() != address(king) && _msgSender() != address(king2d)) revert InvalidOperator();
+		if (_msgSender() != address(king) && _msgSender() != address(king2d))
+			revert InvalidOperator();
 		if (_data.length != 32) revert InvalidDataLength();
 
 		uint256 minimumLockTime = abi.decode(_data, (uint256));
@@ -71,5 +74,14 @@ contract KingStaking is IERC721Receiver, Context {
 
 		stakingInfos[_from][_msgSender()][_tokenId] = minimumLockTime;
 		return this.onERC721Received.selector;
+	}
+
+	function unstake(address _erc721, uint256 _tokenId) external {
+		if (stakingInfos[_msgSender()][_erc721][_tokenId] == 0) revert InvalidOperator();
+		delete stakingInfos[_msgSender()][_erc721][_tokenId];
+
+		emit Unstaked(_msgSender(), _erc721, _tokenId);
+
+		IERC721(_erc721).safeTransferFrom(address(this), _msgSender(), _tokenId);
 	}
 }
