@@ -132,5 +132,12 @@ dist
 # build
 build
 
-#coverage
+# coverage
 coverage.json
+
+# gas report
+gas-report.txt
+
+# typechain
+typechain/src
+typechain/dist
