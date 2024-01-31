@@ -47,6 +47,7 @@ const config: HardhatUserConfig = {
     networks: {
         hardhat: {
             chainId: 31337,
+            initialDate: "2023-01-23T23:23:23.023+23:23"
         },
         localhost: {
             chainId: 31337,

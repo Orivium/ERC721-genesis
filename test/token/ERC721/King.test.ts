@@ -9,7 +9,7 @@ import {
 import MerkleTree from 'merkletreejs';
 import type { ContractFactory, ContractTransactionResponse } from 'ethers';
 
-describe.skip('King ERC721', () => {
+describe('King ERC721', () => {
     let king: King;
     let accounts: HardhatEthersSigner[];
     let purchaser: HardhatEthersSigner;
@@ -28,7 +28,6 @@ describe.skip('King ERC721', () => {
     const ogWhitelistSaleTimestamp = whitelistSaleTimestamp - 7200n; // minus 2 hours
 
     beforeEach(async () => {
-        // i don't get why this is needed while using time.increaseTo ...
         await ethers.provider.send("hardhat_reset");
         accounts = await ethers.getSigners();
         if (!accounts[1]) throw new Error("accounts[1] is undefined");
