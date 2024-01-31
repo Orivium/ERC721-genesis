@@ -1,6 +1,6 @@
 {
-  "name": "@orivium/nft-genesis",
-  "version": "0.1.0",
+  "name": "@orivium/genesis",
+  "version": "1.0.0",
   "description": "",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -9,10 +9,10 @@
     "./**"
   ],
   "dependencies": {
-    "ethers": "^6.9.0"
+    "ethers": "^6.10.0"
   },
   "devDependencies": {
-    "@nomiclabs/hardhat-ethers": "^3.0.3",
+    "@nomiclabs/hardhat-ethers": "^3.0.5",
     "typescript": "^5.0.4"
   },
   "publishConfig": {
