@@ -40,6 +40,8 @@ const deployFunction: DeployFunction = async({ getNamedAccounts, deployments, et
         waitConfirmations: network.name === "hardhat" ? 0 : 2,
     });
 
+    if (network.name === "hardhat") return;
+
     await run("verify:verify", {
         address: (await deployments.get("King2d")).address,
         contract: "contracts/token/ERC721/King2d.sol:King2d",
