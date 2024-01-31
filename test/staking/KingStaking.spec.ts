@@ -15,6 +15,9 @@ describe('KingStaking', () => {
     let king2d: Testable_King2d;
     let kingStaking: KingStaking;
 
+    // contract hyper parameters
+    const MINIMUM_LOCK_TIME = 60n * 60n * 24n * 7n; // 7 days
+
     beforeEach(async () => {
         await deployments.fixture(['test']);
 
@@ -32,16 +35,61 @@ describe('KingStaking', () => {
         );
     });
 
-    describe("King Staking", () => {
+    describe("King Staking", async () => {
         it("expose king address", async () => {
             expect(await kingStaking.king()).to.equal(king.target);
         });
 
-        it("can receive king", async () => {
-            await king.mint(staker.address, 1);
-            await king.connect(staker).transferFrom(staker.address, kingStaking.target, 1);
-            expect(await king.balanceOf(kingStaking.target)).to.equal(1);
-        })
+        describe("Stake", async () => {
+            beforeEach(async () => { await king.mint(staker.address, 1); });
+
+            it("reverts with InvalidDataLength when no data not provided", async () => {
+                await expect(king.connect(staker)["safeTransferFrom(address,address,uint256)"](
+                    staker.address, kingStaking.target, 1
+                )).to.be.revertedWithCustomError(kingStaking, "InvalidDataLength");
+            });
+
+            it("reverts with InvalidDataLength when data is lower than 32 bytes", async () => {
+                const bytes31data = "0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcd";
+                await expect(king.connect(staker)["safeTransferFrom(address,address,uint256,bytes)"](
+                    staker.address, kingStaking.target, 1, bytes31data
+                )).to.be.revertedWithCustomError(kingStaking, "InvalidDataLength");
+            });
+
+            it("reverts with InvalidDataLength when data is higher than 32 bytes", async () => {
+                const bytes33data = "0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef00";
+                await expect(king.connect(staker)["safeTransferFrom(address,address,uint256,bytes)"](
+                    staker.address, kingStaking.target, 1, bytes33data
+                )).to.be.revertedWithCustomError(kingStaking, "InvalidDataLength");
+            });
+
+            it("reverts if minimum lock time is lower than MINIMUM_LOCK_TIME", async () => {
+                const lockTime = MINIMUM_LOCK_TIME - 1n;
+                const coder = new ethers.AbiCoder();
+                const data = coder.encode(["uint256"], [lockTime]);
+                await expect(king.connect(staker)["safeTransferFrom(address,address,uint256,bytes)"](
+                    staker.address, kingStaking.target, 1, data
+                )).to.be.revertedWithCustomError(kingStaking, "InvalidMinimumLockTime");
+            });
+
+            it("store the stacking infos", async () => {
+                const lockTime = MINIMUM_LOCK_TIME;
+                const coder = new ethers.AbiCoder();
+                const data = coder.encode(["uint256"], [lockTime]);
+                await king.connect(staker)["safeTransferFrom(address,address,uint256,bytes)"](
+                    staker.address, kingStaking.target, 1, data
+                );
+                expect(await kingStaking.stakingInfos(staker.address, king.target, 1)).to.equal(lockTime);
+            });
+            it("emits a Staked event", async () => {
+                const lockTime = MINIMUM_LOCK_TIME;
+                const coder = new ethers.AbiCoder();
+                const data = coder.encode(["uint256"], [lockTime]);
+                await expect(king.connect(staker)["safeTransferFrom(address,address,uint256,bytes)"](
+                    staker.address, kingStaking.target, 1, data
+                )).to.emit(kingStaking, "Staked").withArgs(staker.address, king.target, 1, lockTime);
+            });
+        });
     });
 
     describe("King2d Staking", () => {
@@ -49,10 +97,62 @@ describe('KingStaking', () => {
             expect(await kingStaking.king2d()).to.equal(king2d.target);
         });
 
-        it("can receive king2d", async () => {
-            await king2d.mint(staker.address, 1);
-            await king2d.connect(staker).transferFrom(staker.address, kingStaking.target, 1);
-            expect(await king2d.balanceOf(kingStaking.target)).to.equal(1);
+        describe("Stake", () => {
+            beforeEach(async () => { await king2d.mint(staker.address, 1); });
+
+            it("reverts with InvalidDataLength when no data not provided", async () => {
+                await expect(king2d.connect(staker)["safeTransferFrom(address,address,uint256)"](
+                    staker.address, kingStaking.target, 1
+                )).to.be.revertedWithCustomError(kingStaking, "InvalidDataLength");
+            });
+
+            it("reverts with InvalidDataLength when data is lower than 32 bytes", async () => {
+                const bytes31data = "0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcd";
+                await expect(king2d.connect(staker)["safeTransferFrom(address,address,uint256,bytes)"](
+                    staker.address, kingStaking.target, 1, bytes31data
+                )).to.be.revertedWithCustomError(kingStaking, "InvalidDataLength");
+            });
+
+            it("reverts with InvalidDataLength when data is higher than 32 bytes", async () => {
+                const bytes33data = "0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef00";
+                await expect(king2d.connect(staker)["safeTransferFrom(address,address,uint256,bytes)"](
+                    staker.address, kingStaking.target, 1, bytes33data
+                )).to.be.revertedWithCustomError(kingStaking, "InvalidDataLength");
+            });
+
+            it("reverts if minimum lock time is lower than MINIMUM_LOCK_TIME", async () => {
+                const lockTime = MINIMUM_LOCK_TIME - 1n;
+                const coder = new ethers.AbiCoder();
+                const data = coder.encode(["uint256"], [lockTime]);
+                await expect(king2d.connect(staker)["safeTransferFrom(address,address,uint256,bytes)"](
+                    staker.address, kingStaking.target, 1, data
+                )).to.be.revertedWithCustomError(kingStaking, "InvalidMinimumLockTime");
+            });
+
+            it("store the stacking infos", async () => {
+                const lockTime = MINIMUM_LOCK_TIME;
+                const coder = new ethers.AbiCoder();
+                const data = coder.encode(["uint256"], [lockTime]);
+                await king2d.connect(staker)["safeTransferFrom(address,address,uint256,bytes)"](
+                    staker.address, kingStaking.target, 1, data
+                );
+                expect(await kingStaking.stakingInfos(staker.address, king2d.target, 1)).to.equal(lockTime);
+            });
+            it("emits a Staked event", async () => {
+                const lockTime = MINIMUM_LOCK_TIME;
+                const coder = new ethers.AbiCoder();
+                const data = coder.encode(["uint256"], [lockTime]);
+                await expect(king2d.connect(staker)["safeTransferFrom(address,address,uint256,bytes)"](
+                    staker.address, kingStaking.target, 1, data
+                )).to.emit(kingStaking, "Staked").withArgs(staker.address, king2d.target, 1, lockTime);
+            });
+        });
+    });
+
+    describe("onERC721Received", () => {
+        it("cannot be called directly", async () => {
+            await expect(kingStaking.onERC721Received(staker.address, staker.address, 1, "0x"))
+                .to.be.revertedWithCustomError(kingStaking, "InvalidOperator");
         });
     });
 });
