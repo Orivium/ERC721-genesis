@@ -26,7 +26,6 @@ const deployFunction: DeployFunction = async({ getNamedAccounts, deployments, ne
 
     const multiSigWallet = multiSigWallets[network.name] ?? deployer;
 
-    console.log(`deploying King with on ${network.name} network`);
     await deploy("King", {
         from: deployer,
         args: [
@@ -37,6 +36,8 @@ const deployFunction: DeployFunction = async({ getNamedAccounts, deployments, ne
         log: true,
         waitConfirmations: network.name === "hardhat" ? 0 : 5,
     });
+
+    if (network.name === "hardhat") return;
 
     await run("verify:verify", {
         address: (await deployments.get("King")).address,
