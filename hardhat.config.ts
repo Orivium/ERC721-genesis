@@ -14,6 +14,8 @@ import 'hardhat-deploy-ethers';
 import dotenv from "dotenv"
 dotenv.config()
 
+import "./tasks"
+
 const REPORT_GAS = process.env["REPORT_GAS"]?.toLocaleLowerCase() === "true" ?? false
 
 const gasReporter: EthGasReporterConfig = {
