@@ -37,6 +37,9 @@ const ledgerAccounts = [
   "0x935967faD7ebE3E686cf3d835dEfEBA6B5a70CdC", // orivium admin public
 ];
 
+const PRIVATE_KEY = process.env["PRIVATE_KEY"];
+const testAccounts = PRIVATE_KEY !== undefined ? [PRIVATE_KEY] : [];
+
 const config: HardhatUserConfig = {
   solidity: {
     version: "0.8.20",
@@ -58,17 +61,17 @@ const config: HardhatUserConfig = {
     sepolia: {
       url: "https://ethereum-sepolia.publicnode.com",
       chainId: 11155111,
-      ledgerAccounts,
+      accounts: testAccounts,
     },
     goerli: {
       url: "https://ethereum-goerli.publicnode.com",
       chainId: 5,
-      ledgerAccounts,
+      accounts: testAccounts,
     },
     arbitrumSepolia: {
       url: "https://sepolia-rollup.arbitrum.io/rpc",
       chainId: 421614,
-      ledgerAccounts,
+      accounts: testAccounts,
     },
     mainnet: {
       url: "https://ethereum.publicnode.com",
