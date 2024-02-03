@@ -1,7 +1,7 @@
 import { task } from "hardhat/config";
 import { HardhatRuntimeEnvironment, TaskArguments } from "hardhat/types";
 import "@nomicfoundation/hardhat-toolbox";
-import { King2d, King2d__factory } from "../../../typechain";
+import { King2d, King2d__factory } from "@orivium/genesis/dist";
 
 task("king2d:wallet", "get wallet of owner")
   .addParam("owner", "owner address")
@@ -16,5 +16,5 @@ task("king2d:wallet", "get wallet of owner")
       const wallet = await king2d.walletOfOwner(taskArguments.owner);
       console.log(`${taskArguments.owner} has ${wallet.length} king2d nft(s)`);
       console.log(wallet);
-    },
+    }
   );
