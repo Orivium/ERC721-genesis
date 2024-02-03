@@ -19,10 +19,10 @@ describe("KingStaking", () => {
   beforeEach(async () => {
     await deployments.fixture(["test"]);
 
-    const accounts = await ethers.getSigners();
+    const accounts: HardhatEthersSigner[] = await ethers.getSigners();
     if (!accounts[3]) throw new Error("missing staker");
 
-    staker = accounts[3];
+    [, , , staker] = accounts;
     king = await ethers.getContract("Testable_King");
     king2d = await ethers.getContract("Testable_King2d");
 

@@ -4,9 +4,10 @@ task("orivium:addresses", "Retrieve deployed contract addresses").setAction(
   async (_, hre) => {
     Object.entries(await hre.deployments.all()).forEach(([k, v]) => {
       console.log(k, v.address);
-      for (const [key, value] of Object.entries(v)) {
+      const entries = Object.entries(v);
+      entries.forEach(([key, value]) => {
         console.log(key, value);
-      }
+      });
     });
   }
 );

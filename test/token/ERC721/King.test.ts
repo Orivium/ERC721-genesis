@@ -29,11 +29,9 @@ describe("King ERC721", () => {
     await ethers.provider.send("hardhat_reset");
     accounts = await ethers.getSigners();
     if (!accounts[1]) throw new Error("accounts[1] is undefined");
-    purchaser = accounts[1];
-
     if (!accounts[10]) throw new Error("accounts[10] is undefined");
-    multiSigWallet = accounts[10];
 
+    [, purchaser, , , , , , , , , multiSigWallet] = accounts;
     // create whitelist merkle tree
     const whitelist = accounts.slice(0, 6).map((account) => account.address);
     const leafNodes = whitelist.map((address) => ethers.keccak256(address));
@@ -440,7 +438,7 @@ describe("King ERC721", () => {
       it("should mint 144 nfts to the oriviumMultiSig address from 4300 to 4444", async () => {
         const kingFactory: ContractFactory =
           await ethers.getContractFactory("King");
-        const king: King = <King>(
+        king = <King>(
           await kingFactory.deploy(rootHash, ogRootHash, multiSigWallet.address)
         );
         expect(await king.balanceOf(multiSigWallet.address)).to.equal(144);

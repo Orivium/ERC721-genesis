@@ -1,4 +1,7 @@
 {
+  "ts-node": {
+    "require": ["tsconfig-paths/register"],
+  },
   "compilerOptions": {
     /* Visit https://aka.ms/tsconfig to read more about this file */
 
@@ -33,8 +36,7 @@
     // "allowImportingTsExtensions": true,
     "baseUrl": "./" /* Specify the base directory to resolve non-relative module names. */,
     "paths": {
-      "@orivium/types": ["./typechain/dist"],
-      "typechain/*": ["./typechain/dist/*"],
+      "@orivium/types": ["./typechain-types/dist"],
       "contracts/*": ["./contracts/*"],
     } /* Specify a set of entries that re-map imports to additional lookup locations. */,
     // "rootDirs": [],                                   /* Allow multiple folders to be treated as one when resolving modules. */
@@ -107,13 +109,7 @@
     // "skipDefaultLibCheck": true,                      /* Skip type checking .d.ts files that are included with TypeScript. */
     "skipLibCheck": true /* Skip type checking all .d.ts files. */,
   },
-  "include": [
-    "./deploy",
-    "./test",
-    "./tasks",
-    /* "./typechain", */
-    "./scripts",
-  ],
+  "include": ["./deploy", "./test", "./tasks", "./scripts"],
   "files": ["./hardhat.config.ts"],
   "exclude": ["./node_modules"],
 }

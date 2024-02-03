@@ -5,6 +5,7 @@ import "@nomicfoundation/hardhat-toolbox";
 import "@nomicfoundation/hardhat-ledger";
 import "@nomicfoundation/hardhat-verify";
 import "@typechain/hardhat";
+import "module-alias/register";
 
 import { EthGasReporterConfig } from "hardhat-gas-reporter/dist/src/types";
 import "hardhat-gas-reporter";
@@ -13,9 +14,9 @@ import "hardhat-deploy-ethers";
 
 import dotenv from "dotenv";
 
-dotenv.config();
+import "./tasks";
 
-// import "./tasks"
+dotenv.config();
 
 const REPORT_GAS =
   process.env["REPORT_GAS"]?.toLocaleLowerCase() === "true" ?? false;
@@ -38,7 +39,7 @@ const ledgerAccounts = [
   "0x935967faD7ebE3E686cf3d835dEfEBA6B5a70CdC", // orivium admin public
 ];
 
-const PRIVATE_KEY = process.env["PRIVATE_KEY"];
+const { PRIVATE_KEY } = process.env;
 const testAccounts = PRIVATE_KEY !== undefined ? [PRIVATE_KEY] : [];
 
 const config: HardhatUserConfig = {
@@ -107,7 +108,7 @@ const config: HardhatUserConfig = {
     timeout: 300000, // 300 seconds max for running tests
   },
   typechain: {
-    outDir: "./typechain/src",
+    outDir: "./typechain-types/src",
     target: "ethers-v6",
     alwaysGenerateOverloads: false, // should overloads with full signatures like deposit(uint256) be generated always, even if there are no overloads?
     externalArtifacts: ["externalArtifacts/*.json"], // optional array of glob patterns with external artifacts to process (for example external libs from node_modules)

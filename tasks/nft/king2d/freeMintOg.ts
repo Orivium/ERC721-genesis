@@ -2,7 +2,7 @@ import { task } from "hardhat/config";
 import { HardhatRuntimeEnvironment, TaskArguments } from "hardhat/types";
 import "@nomicfoundation/hardhat-toolbox";
 import MerkleTree from "merkletreejs";
-import { King2d, King2d__factory } from "@orivium/genesis/dist";
+import { King2d, King2d__factory } from "@orivium/types";
 import { getOGWhiteListedAddress } from "../../../utils/whitelist";
 
 task("king2d:free-mint-og", "mint king2d nft").setAction(

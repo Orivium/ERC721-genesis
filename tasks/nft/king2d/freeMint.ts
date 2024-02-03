@@ -1,7 +1,7 @@
 import { task } from "hardhat/config";
 import { HardhatRuntimeEnvironment, TaskArguments } from "hardhat/types";
 import "@nomicfoundation/hardhat-toolbox";
-import { King2d, King2d__factory } from "@orivium/genesis/dist";
+import { King2d, King2d__factory } from "@orivium/types";
 
 task("king2d:free-mint", "mint king2d nft")
   .addOptionalParam("batch", "batch size", "1")

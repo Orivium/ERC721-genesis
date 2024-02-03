@@ -1,7 +1,7 @@
 import { task } from "hardhat/config";
 import { HardhatRuntimeEnvironment, TaskArguments } from "hardhat/types";
 import "@nomicfoundation/hardhat-toolbox";
-import { King, King__factory } from "@orivium/genesis/dist";
+import { King, King__factory } from "@orivium/types";
 
 task("king:purchase", "buy king nft")
   .addOptionalParam("batch", "batch size", "1")

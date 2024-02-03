@@ -36,6 +36,12 @@
           "vueIndentScriptAndStyle": false,
           "parser": "typescript"
         }
+      },
+      {
+        "files": ".eslintrc",
+        "options": {
+          "parser": "json"
+        }
       }
     ]
   }

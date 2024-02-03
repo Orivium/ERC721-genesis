@@ -1,7 +1,7 @@
 import { task } from "hardhat/config";
 import { HardhatRuntimeEnvironment, TaskArguments } from "hardhat/types";
 import "@nomicfoundation/hardhat-toolbox";
-import { King2d, King2d__factory } from "@orivium/genesis/dist";
+import { King2d, King2d__factory } from "@orivium/types";
 
 task("king2d:owner-of", "retrieve owner of king2d nft")
   .addParam("tokenId", "token id of the nft")

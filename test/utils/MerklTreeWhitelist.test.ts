@@ -48,7 +48,7 @@ describe("MerkleTreeWhitelist", () => {
 
   it("cannot be deployed with same root hash for og and whitelist", async () => {
     const leafNodes = whitelisted.map((address) => ethers.keccak256(address));
-    const merkleTree = new MerkleTree(leafNodes, ethers.keccak256, {
+    merkleTree = new MerkleTree(leafNodes, ethers.keccak256, {
       sortPairs: true,
     });
     const rootHash = merkleTree.getHexRoot();
@@ -56,7 +56,7 @@ describe("MerkleTreeWhitelist", () => {
     const ogLeafNode = ogWhitelisted.map((address) =>
       ethers.keccak256(address)
     );
-    const ogMerkleTree = new MerkleTree(ogLeafNode, ethers.keccak256, {
+    ogMerkleTree = new MerkleTree(ogLeafNode, ethers.keccak256, {
       sortPairs: true,
     });
     const ogRootHash = ogMerkleTree.getHexRoot();
@@ -78,19 +78,21 @@ describe("MerkleTreeWhitelist", () => {
   });
 
   it("every address in the whitelist should be whitelisted", async () => {
-    for (const address of whitelisted) {
+    whitelisted.forEach(async (address) => {
       const proof = merkleTree.getHexProof(ethers.keccak256(address));
+      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
       expect(await merkleTreeWhitelist.test_isWhitelisted(address, proof)).to.be
         .true;
-    }
+    });
   });
 
   it("every address in the og whitelist should be whitelisted", async () => {
-    for (const address of ogWhitelisted) {
+    ogWhitelisted.forEach(async (address) => {
       const proof = ogMerkleTree.getHexProof(ethers.keccak256(address));
+      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
       expect(await merkleTreeWhitelist.test_isOGWhitelisted(address, proof)).to
         .be.true;
-    }
+    });
   });
 
   it("every address not in the whitelist should not be whitelisted", async () => {
@@ -99,14 +101,16 @@ describe("MerkleTreeWhitelist", () => {
       "0x1234567890123456789012345678901234567890123456789012345678901234",
       "0x1234567890123456789012345678901234567890123456789012345678901234",
     ];
-    for (const address of notWhitelisted) {
+    notWhitelisted.forEach(async (address) => {
       const [isWhitelist, isOGWhitelist] = await Promise.all([
         merkleTreeWhitelist.test_isWhitelisted(address, fakeProof),
         merkleTreeWhitelist.test_isOGWhitelisted(address, fakeProof),
       ]);
+      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
       expect(isWhitelist).to.be.false;
+      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
       expect(isOGWhitelist).to.be.false;
-    }
+    });
   });
 
   describe("modifiers", () => {

@@ -1,7 +1,7 @@
 import { task } from "hardhat/config";
 import { HardhatRuntimeEnvironment, TaskArguments } from "hardhat/types";
 import "@nomicfoundation/hardhat-toolbox";
-import { King, King__factory } from "@orivium/genesis/dist";
+import { King, King__factory } from "@orivium/types";
 
 task("king:wallet", "get wallet of owner")
   .addParam("owner", "owner address")

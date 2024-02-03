@@ -28,10 +28,9 @@ describe("King2d ERC721", () => {
     await ethers.provider.send("hardhat_reset");
     accounts = await ethers.getSigners();
     if (!accounts[1]) throw new Error("accounts[1] is undefined");
-    purchaser = accounts[1];
-
     if (!accounts[10]) throw new Error("accounts[10] is undefined");
-    multiSigWallet = accounts[10];
+
+    [, purchaser, , , , , , , , , multiSigWallet] = accounts;
 
     // create whitelist merkle tree
     const whitelist = accounts.slice(0, 6).map((account) => account.address);
@@ -207,6 +206,7 @@ describe("King2d ERC721", () => {
           const promises = [];
           for (let i = 0n; i < mintableSupply; i += 1n) {
             const newPk = ethers.Wallet.createRandom().privateKey;
+            // eslint-disable-next-line no-await-in-loop
             const newSigner = await ethers.getSigner(newPk);
             promises.push(king2d.connect(newSigner).freeMint());
           }
@@ -343,9 +343,11 @@ describe("King2d ERC721", () => {
       it("should return amount of mintable token for given wallet", async () => {
         let mintedAmount = 0n;
         while (mintedAmount < maxWalletAmount) {
+          // eslint-disable-next-line no-await-in-loop
           expect(await king2d.walletMintable(purchaser.address)).to.equal(
             maxWalletAmount - mintedAmount
           );
+          // eslint-disable-next-line no-await-in-loop
           await king2d.connect(purchaser).freeMint();
           mintedAmount += 1n;
         }
