@@ -111,7 +111,7 @@ contract King is ERC721, ReentrancyGuard, MerkleTreeWhitelist, Ownable {
 		_purchaseBatch(_batch, OG_PRICE);
 	}
 
-	function _purchase(uint _unitPrice) private {
+	function _purchase(uint256 _unitPrice) private {
 		if (msg.value != _unitPrice) revert InsufficientFunds();
 		if (_tokenIdTracker >= AMOUNT_ON_SALE) revert SoldOut();
 
