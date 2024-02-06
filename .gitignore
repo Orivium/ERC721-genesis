@@ -144,3 +144,6 @@ typechain-types/dist
 
 # config 
 settings.json
+
+# foundry 
+cache
