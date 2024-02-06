@@ -1591,6 +1591,7 @@ __metadata:
     module-alias: "npm:^2.2.3"
     prettier: "npm:^3.2.4"
     prettier-plugin-solidity: "npm:^1.3.1"
+    solc: "npm:^0.8.24"
     solhint: "npm:^4.1.1"
     solhint-plugin-prettier: "npm:^0.1.0"
     solidity-bytes-utils: "npm:^0.8.2"
@@ -3608,6 +3609,13 @@ __metadata:
   version: 10.0.1
   resolution: "commander@npm:10.0.1"
   checksum: 10c0/53f33d8927758a911094adadda4b2cbac111a5b377d8706700587650fd8f45b0bbe336de4b5c3fe47fd61f420a3d9bd452b6e0e6e5600a7e74d7bf0174f6efe3
+  languageName: node
+  linkType: hard
+
+"commander@npm:^8.1.0":
+  version: 8.3.0
+  resolution: "commander@npm:8.3.0"
+  checksum: 10c0/8b043bb8322ea1c39664a1598a95e0495bfe4ca2fad0d84a92d7d1d8d213e2a155b441d2470c8e08de7c4a28cf2bc6e169211c49e1b21d9f7edc6ae4d9356060
   languageName: node
   linkType: hard
 
@@ -9283,6 +9291,23 @@ __metadata:
   bin:
     solcjs: solcjs
   checksum: 10c0/28405adfba1f55603dc5b674630383bfbdbfab2d36deba2ff0a90c46cbc346bcabf0ed6175e12ae3c0b751ef082d0405ab42dcc24f88603a446e097a925d7425
+  languageName: node
+  linkType: hard
+
+"solc@npm:^0.8.24":
+  version: 0.8.24
+  resolution: "solc@npm:0.8.24"
+  dependencies:
+    command-exists: "npm:^1.2.8"
+    commander: "npm:^8.1.0"
+    follow-redirects: "npm:^1.12.1"
+    js-sha3: "npm:0.8.0"
+    memorystream: "npm:^0.3.1"
+    semver: "npm:^5.5.0"
+    tmp: "npm:0.0.33"
+  bin:
+    solcjs: solc.js
+  checksum: 10c0/31f748be9998d9dee6a4c59aa6800a87802827766ccab2429cce2783898561658c98bad89c081a7b69510e3741668245375ab3dd73b840f15213352d5caf0a91
   languageName: node
   linkType: hard
 

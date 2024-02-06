@@ -1,0 +1,15 @@
+@openzeppelin/contracts/=lib/openzeppelin-contracts/contracts/
+@openzeppelin/contracts-upgradeable/=lib/openzeppelin-contracts-upgradeable/contracts/
+@layerzerolabs/lz-evm-oapp-v2/=lib/LayerZero-v2/oapp/
+@layerzerolabs/lz-evm-protocol-v2/=lib/LayerZero-v2/protocol/
+@layerzerolabs/lz-evm-messagelib-v2/=lib/LayerZero-v2/messagelib/
+@layerzerolabs/lz-evm-v1-0.7/=../node_modules/@layerzerolabs/lz-evm-v1-0.7/
+hardhat-deploy/solc_0.8/=../node_modules/hardhat-deploy/solc_0.8/
+ds-test/=lib/forge-std/lib/ds-test/src/
+solidity-bytes-utils/=../node_modules/solidity-bytes-utils/
+erc4626-tests/=lib/openzeppelin-contracts/lib/erc4626-tests/
+forge-std/=lib/forge-std/src/
+LayerZero-v2/=lib/LayerZero-v2/
+openzeppelin-contracts-upgradeable/=lib/openzeppelin-contracts-upgradeable/
+openzeppelin-contracts/=lib/openzeppelin-contracts/
+openzeppelin/=lib/openzeppelin-contracts-upgradeable/contracts/
