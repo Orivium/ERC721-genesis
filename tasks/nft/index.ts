@@ -1,2 +1,2 @@
-import './king';
-import './king2d';
+import "./king";
+import "./king2d";

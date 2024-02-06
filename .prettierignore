@@ -8,5 +8,6 @@ img
 .env
 .*
 README.md
-coverage.json
 deployments
+build
+typechain-types

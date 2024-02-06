@@ -5,4 +5,4 @@ coverage
 deployments
 node_modules
 dist
-typechain
+typechain-types
