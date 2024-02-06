@@ -22,7 +22,7 @@ pragma solidity ^0.8.20;
 
 import { ERC721 } from "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
-import { ReentrancyGuard } from "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
+import { ReentrancyGuard } from "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 
 import { MerkleTreeWhitelist } from "../../utils/MerkleTreeWhitelist.sol";
 
@@ -52,11 +52,7 @@ contract King is ERC721, ReentrancyGuard, MerkleTreeWhitelist, Ownable {
 		bytes32 _whitelistMerkleRoot,
 		bytes32 _ogWhitelistMerkleRoot,
 		address _oriviumMultiSigWallet
-	)
-		MerkleTreeWhitelist(_whitelistMerkleRoot, _ogWhitelistMerkleRoot)
-		ERC721("King", "KING")
-		Ownable(_msgSender())
-	{
+	) MerkleTreeWhitelist(_whitelistMerkleRoot, _ogWhitelistMerkleRoot) ERC721("King", "KING") {
 		// Minting 144 reserved tokens to the Orivium multisig wallet,
 		// these tokens will be used for partnerships and marketing purposes
 		for (uint256 i = AMOUNT_ON_SALE + 1; i <= TOTAL_SUPPLY; i += 1) {
