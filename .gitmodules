@@ -7,3 +7,6 @@
 [submodule "LayerZero-Bridge/lib/LayerZero-v2"]
 	path = LayerZero-Bridge/lib/LayerZero-v2
 	url = https://github.com/LayerZero-Labs/LayerZero-v2
+[submodule "LayerZero-Bridge/lib/openzeppelin-contracts"]
+	path = LayerZero-Bridge/lib/openzeppelin-contracts
+	url = https://github.com/OpenZeppelin/openzeppelin-contracts
