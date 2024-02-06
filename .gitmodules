@@ -4,3 +4,6 @@
 [submodule "LayerZero-Bridge/lib/LayerZero-v2.git"]
 	path = LayerZero-Bridge/lib/LayerZero-v2.git
 	url = https://github.com/LayerZero-Labs/LayerZero-v2.git
+[submodule "LayerZero-Bridge/lib/LayerZero-v2"]
+	path = LayerZero-Bridge/lib/LayerZero-v2
+	url = https://github.com/LayerZero-Labs/LayerZero-v2
