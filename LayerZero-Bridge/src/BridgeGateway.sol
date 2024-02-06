@@ -42,7 +42,7 @@ contract BridgeGateway is IERC721Receiver, Ownable, OApp {
 		address _token,
 		address _endpoint,
 		address _oriviumMultiSigWallet
-	) OApp(_endpoint, _oriviumMultiSigWallet) Ownable(_oriviumMultiSigWallet) {
+	) OApp(_endpoint, _oriviumMultiSigWallet) Ownable() {
 		token = IERC721(_token);
 	}
 
