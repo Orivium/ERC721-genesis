@@ -1,3 +1,6 @@
 [submodule "LayerZero-Bridge/lib/forge-std"]
 	path = LayerZero-Bridge/lib/forge-std
 	url = https://github.com/foundry-rs/forge-std
+[submodule "LayerZero-Bridge/lib/LayerZero-v2.git"]
+	path = LayerZero-Bridge/lib/LayerZero-v2.git
+	url = https://github.com/LayerZero-Labs/LayerZero-v2.git
