@@ -11,7 +11,7 @@
         "lint:fix": "solhint 'contracts/**/*.sol' --fix",
         "format": "prettier --write 'contracts/**/*.sol'",
         "coverage": "hardhat coverage",
-        "typechain": "hardhat typechain && cd typechain-types && npx tsc && cd ..",
+        "typechain": "sh ./build-typechain.sh",
         "ts-lint": "eslint . --ext .ts",
         "ts-lint:fix": "eslint . --ext .ts --fix"
     },
